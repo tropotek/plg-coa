@@ -1,0 +1,39 @@
+{
+    "name": "ttek-plg/plg-coa",
+    "type": "ttek-plugin",
+    "description": "EMS COA plugin, Send Certificates Of Appreciation to companies/staff/students.",
+    "keywords":  [
+        "tropotek",
+        "plugin",
+        "skills",
+        "goals",
+        "EMS"
+    ],
+    "homepage": "http://www.tropotek.com/",
+    "time": "2017-09-27",
+    "access": "admin, profile",
+    "license": "MIT",
+    "version": "master",
+    "authors":  [
+         {
+            "name": "Michael Mifsud",
+            "homepage": "http://www.tropotek.com/"
+        }
+    ],
+    "autoload":  {
+        "psr-0":  {
+            "Coa\\": ""
+        }
+    },
+    "extra":  {
+        "branch-alias":  {
+            "dev-master": "2.0.x-dev"
+        }
+    },
+    "require":  {
+        "ttek/tk-framework": "~2.0",
+        "ttek/tk-uni": "~2.0",
+        "ttek/tk-installers": "~2.0",
+        "mpdf/mpdf": "dev-master"
+    }
+}
