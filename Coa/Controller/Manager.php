@@ -27,9 +27,9 @@ class Manager extends \Uni\Controller\AdminManagerIface
     public function doDefault(\Tk\Request $request)
     {
 
-        $editUrl = \Uni\Uri::createSubjectUrl('/coaEdit.html');
-        $this->table = \Bs\Table\User::create()->setEditUrl($editUrl)->init();
-        $this->table->setList($this->table->findList(array()));
+        $this->table = \Coa\Table\Coa::create()->init();
+
+        $this->table->setList($this->table->findList(array('profileId' => $this->getConfig()->getProfileId())));
 
     }
 

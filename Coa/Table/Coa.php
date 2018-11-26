@@ -30,10 +30,10 @@ class Coa extends \Uni\TableIface
     public function init()
     {
         $this->appendCell(new Cell\Checkbox('id'));
-        $this->appendCell(new Cell\Text('profileId'));
+        //$this->appendCell(new Cell\Text('profileId'));
         $this->appendCell(new Cell\Text('type'));
         $this->appendCell(new Cell\Text('subject'));
-        $this->appendCell(new Cell\Date('modified'));
+        //$this->appendCell(new Cell\Date('modified'));
         $this->appendCell(new Cell\Date('created'));
 
         // Filters

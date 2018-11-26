@@ -27,12 +27,13 @@ class Coa extends \Bs\FormIface
      */
     public function init()
     {
-        
-        $this->appendField(new Field\Select('profileId', array()))->prependOption('-- Select --', '');
-        $this->appendField(new Field\Input('type'));
+
+        $list = array('Company' => 'company', 'Staff' => 'staff', 'Student' => 'student');
+        $this->appendField(new Field\Select('type', $list))->prependOption('-- Select --', '');
+        //$this->appendField(new Field\Input('type'));
         $this->appendField(new Field\Input('subject'));
-        $this->appendField(new Field\Textarea('html'));
-        $this->appendField(new Field\Textarea('emailHtml'));
+        $this->appendField(new Field\Textarea('html'))->addCss('mce-med');
+        $this->appendField(new Field\Textarea('emailHtml'))->addCss('mce-med');
 
         $this->appendField(new Event\Submit('update', array($this, 'doSubmit')));
         $this->appendField(new Event\Submit('save', array($this, 'doSubmit')));
