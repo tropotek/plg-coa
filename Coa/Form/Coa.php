@@ -32,7 +32,7 @@ class Coa extends \Bs\FormIface
         $this->appendField(new Field\Select('type', $list))->prependOption('-- Select --', '');
         //$this->appendField(new Field\Input('type'));
         $this->appendField(new Field\Input('subject'));
-        $this->appendField(new Field\Textarea('html'))->addCss('mce-med');
+        $this->appendField(new Field\Textarea('html'))->addCss('mce');
         $this->appendField(new Field\Textarea('emailHtml'))->addCss('mce-med');
 
         $this->appendField(new Event\Submit('update', array($this, 'doSubmit')));
