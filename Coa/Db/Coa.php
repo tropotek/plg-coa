@@ -50,6 +50,11 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      */
     public $created = null;
 
+    /**
+     * @var \App\Db\Profile
+     */
+    private $profile = null;
+
 
     /**
      * Coa
@@ -60,8 +65,19 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         $this->created = new \DateTime();
 
     }
-    
 
+    /**
+     * @return \App\Db\Profile|null|\Tk\Db\Map\Model|\Tk\Db\ModelInterface
+     * @throws \Exception
+     */
+    public function getProfile()
+    {
+        if (!$this->profile) {
+            $this->profile = \App\Db\SubjectMap::create()->find($this->profileId);
+        }
+        return $this->profile;
+    }
+    
 
     
     /**

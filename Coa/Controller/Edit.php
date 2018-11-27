@@ -8,6 +8,10 @@ namespace Coa\Controller;
  */
 class Edit extends \Uni\Controller\AdminEditIface
 {
+    /**
+     * @var \Coa\Db\Coa
+     */
+    protected $coa = null;
 
     /**
      * @throws \Exception
@@ -19,18 +23,52 @@ class Edit extends \Uni\Controller\AdminEditIface
 
     /**
      * @param \Tk\Request $request
+     * @return mixed
      * @throws \Exception
      */
     public function doDefault(\Tk\Request $request)
     {
-        $coa = new \Coa\Db\Coa();
-
+        $this->coa = new \Coa\Db\Coa();
+        $this->coa->profileId = $this->getConfig()->getProfileId();
         if ($request->get('coaId')) {
-            $coa = \Coa\Db\CoaMap::create()->find($request->get('coaId'));
+            $this->coa = \Coa\Db\CoaMap::create()->find($request->get('coaId'));
         }
 
-        $this->setForm(\Coa\Form\Coa::create()->setModel($coa));
+        if ($request->has('preview')) {
+            return $this->doPreview($request);
+        }
+
+        $this->setForm(\Coa\Form\Coa::create()->setModel($this->coa));
         $this->getForm()->execute();
+    }
+
+    /**
+     * @param \Tk\Request $request
+     * @return mixed
+     * @throws \Exception
+     */
+    public function doPreview(\Tk\Request $request)
+    {
+        /** @var \Coa\Adapter\Iface $adapter */
+        $adapter = null;
+        switch ($this->coa->type) {
+            case 'company':
+                $company = \App\Db\CompanyMap::create()->findFiltered(array('profileId' => $this->coa->profileId), \Tk\Db\Tool::create('RAND()'))->current();
+                $adapter = new \Coa\Adapter\Company($this->coa, $company);
+                break;
+            case 'staff':
+                $staff = \App\Db\UserMap::create()->findFiltered(array('profileId' => $this->coa->profileId, 'type' => \Uni\Db\Role::TYPE_STAFF), \Tk\Db\Tool::create('RAND()'))->current();
+                $adapter = new \Coa\Adapter\User($this->coa, $staff);
+                break;
+            case 'student':
+                $student = \App\Db\UserMap::create()->findFiltered(array('subjectId' => $this->getConfig()->getSubjectId(), 'type' => \Uni\Db\Role::TYPE_STUDENT), \Tk\Db\Tool::create('RAND()'))->current();
+                $adapter = new \Coa\Adapter\User($this->coa, $student);
+                break;
+        }
+
+        $ren =  \Coa\Ui\PdfCertificate::create($adapter, 'Sample');
+        $ren->output();     // comment this to see html version
+        return $ren->show();
     }
 
     /**
@@ -39,6 +77,9 @@ class Edit extends \Uni\Controller\AdminEditIface
      */
     public function show()
     {
+
+        $this->getActionPanel()->add(\Tk\Ui\Button::create('Preview', \Uni\Uri::create()->set('preview'), 'fa fa-eye'));
+
         $template = parent::show();
         
         // Render the form

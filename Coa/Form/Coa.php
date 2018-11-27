@@ -33,11 +33,37 @@ class Coa extends \Bs\FormIface
         //$this->appendField(new Field\Input('type'));
         $this->appendField(new Field\Input('subject'));
         $this->appendField(new Field\Textarea('html'))->addCss('mce');
-        $this->appendField(new Field\Textarea('emailHtml'))->addCss('mce-med');
+        $this->appendField(new Field\Textarea('emailHtml'))->addCss('mce-med')->setAttr('data-background-image', '/~mifsudm/Unimelb/ems/data/media/dvm34PdfBg.png');
 
         $this->appendField(new Event\Submit('update', array($this, 'doSubmit')));
         $this->appendField(new Event\Submit('save', array($this, 'doSubmit')));
         $this->appendField(new Event\Link('cancel', $this->getBackUrl()));
+
+
+
+        $js = <<<JS
+jQuery(function ($) {
+  
+  var ed = $('#coa-html').tinymce();
+  ed.on('init', function (e) {
+    console.log(this);
+    console.log(this.dom.getRoot());
+    var body = this.dom.getRoot(); 
+    ed.dom.setStyle(body, 'background-image', "url('/~mifsudm/Unimelb/ems/data/media/dvm34PdfBg.png')");
+    ed.dom.setStyle(body, 'background-repeat', "no-repeat");
+    ed.dom.setStyle(body, 'background-size', "1300px 850px");
+    ed.dom.setStyle(body, 'width', "1300px");
+    ed.dom.setStyle(body, 'height', "850px");
+    ed.dom.setStyle(body, 'background-color', "#EFEFEF");
+    
+  });
+  
+  
+});
+JS;
+        $this->getRenderer()->getTemplate()->appendJs($js);
+
+
 
     }
 
