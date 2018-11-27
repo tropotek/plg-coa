@@ -78,19 +78,34 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     public function getProfile()
     {
         if (!$this->profile) {
-            $this->profile = \App\Db\SubjectMap::create()->find($this->profileId);
+            $this->profile = \App\Db\ProfileMap::create()->find($this->profileId);
         }
         return $this->profile;
     }
 
     /**
+     * Get the path for all file associated to this object
+     *
+     * @return string
+     */
+    public function getDataPath()
+    {
+        try {
+            return sprintf('%s/coa/%s', $this->getProfile()->getDataPath(), $this->getVolatileId());
+        } catch (\Exception $e) { }
+        return $this->getDataPath().'/coa/'.$this->getVolatileId();
+    }
+
+    /**
      *
      *
-     * @return \Uni\Uri
+     * @return null|\Uni\Uri
      */
     public function getBackgroundUrl()
     {
-        return \Uni\Uri::create('/');
+        if (is_file($this->getConfig()->getDataPath() . $this->background)) {
+            return \Uni\Uri::create($this->getConfig()->getDataUrl() . $this->background);
+        }
     }
 
     

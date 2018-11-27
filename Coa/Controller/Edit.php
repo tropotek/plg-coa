@@ -78,7 +78,7 @@ class Edit extends \Uni\Controller\AdminEditIface
     public function show()
     {
 
-        $this->getActionPanel()->add(\Tk\Ui\Button::create('Preview', \Uni\Uri::create()->set('preview'), 'fa fa-eye'));
+        $this->getActionPanel()->add(\Tk\Ui\Button::create('Preview', \Uni\Uri::create()->set('preview'), 'fa fa-eye'))->setAttr('target', '_blank');
 
         $template = parent::show();
         

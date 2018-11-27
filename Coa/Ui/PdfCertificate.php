@@ -83,11 +83,8 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
      */
     protected function initPdf()
     {
-        $url = \Tk\Uri::create($this->getConfig()->getSiteUrl())->toString();
-        $html = $this->show()->toString();
-        $html = str_replace(\Tk\Uri::create('/')->getPath(), \Tk\Uri::create('/')->toString(), $html);
-        vd($html);
 
+        $html = $this->show()->toString();
         $this->mpdf = new \Mpdf\Mpdf(array(
             'margin_left' => 0,
             'margin_right' => 0,
@@ -160,18 +157,9 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
 
         $template->appendHtml('content', $this->getCoa()->html);
 
-
-
-
-
-
-
-
-
-        $css = <<<CSS
-
-CSS;
-        //$template->appendCss($css);
+        if ($this->getCoa()->getBackgroundUrl()) {
+            $template->setAttr('body', 'style', 'background-image: url(\''.$this->getCoa()->getBackgroundUrl().'\');background-image-resize: 4; background-image-resolution: from-image;');
+        }
 
         return $template;
     }
@@ -191,7 +179,7 @@ CSS;
   <meta charset="UTF-8" />
   <title></title>
 </head>
-<body class="" style="background-image: url('/~mifsudm/Unimelb/ems/data/media/dvm34PdfBg.png'); background-image-resize: 4; background-image-resolution: from-image;">
+<body class="" style="" var="body">
   
   
   <div var="content"></div>

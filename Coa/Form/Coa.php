@@ -32,11 +32,19 @@ class Coa extends \Bs\FormIface
         $this->appendField(new Field\Select('type', $list))->prependOption('-- Select --', '');
         //$this->appendField(new Field\Input('type'));
         $this->appendField(new Field\Input('subject'));
-        $this->appendField(new Field\Textarea('html'))
+
+        $this->form->addField(new Field\File('background', $this->getCoa()->getDataPath()))
+            ->setMaxFileSize($this->getConfig()->get('upload.profile.imagesize'))->setAttr('accept', '.png,.jpg,.jpeg,.gif')
+            ->addCss('tk-imageinput')
+            ->setNotes('Upload the background image for the certificate (Recommended Size: 1300x850)');
+
+        $htmlEl = $this->appendField(new Field\Textarea('html'))
             ->addCss('mce')->setAttr('data-elfinder-path', $this->getCoa()->getProfile()->getInstitution()->getDataPath().'/media');
+        if ($this->getCoa()->getBackgroundUrl()) {
+            $htmlEl->setAttr('data-background-image', $this->getCoa()->getBackgroundUrl());
+        }
         $this->appendField(new Field\Textarea('emailHtml'))
-            ->addCss('mce-med')->setAttr('data-elfinder-path', $this->getCoa()->getProfile()->getInstitution()->getDataPath().'/media')
-            ->setAttr('data-background-image', '/~mifsudm/Unimelb/ems/data/media/dvm34PdfBg.png');
+            ->addCss('mce-med')->setAttr('data-elfinder-path', $this->getCoa()->getProfile()->getInstitution()->getDataPath().'/media');
 
         $this->appendField(new Event\Submit('update', array($this, 'doSubmit')));
         $this->appendField(new Event\Submit('save', array($this, 'doSubmit')));
@@ -49,10 +57,10 @@ jQuery(function ($) {
   
   var ed = $('#coa-html').tinymce();
   ed.on('init', function (e) {
-    console.log(this);
-    console.log(this.dom.getRoot());
+    //console.log($(this.targetElm).data('backgroundImage'));
+    //console.log(this.dom.getRoot());
     var body = this.dom.getRoot(); 
-    ed.dom.setStyle(body, 'background-image', "url('/~mifsudm/Unimelb/ems/data/media/dvm34PdfBg.png')");
+    ed.dom.setStyle(body, 'background-image', "url('"+$(this.targetElm).data('backgroundImage')+"')");
     ed.dom.setStyle(body, 'background-repeat', "no-repeat");
     ed.dom.setStyle(body, 'background-size', "1300px 850px");
     ed.dom.setStyle(body, 'width', "1300px");
@@ -60,7 +68,6 @@ jQuery(function ($) {
     ed.dom.setStyle(body, 'background-color', "#EFEFEF");
     
   });
-  
   
 });
 JS;
@@ -90,7 +97,13 @@ JS;
         // Load the object with form data
         \Coa\Db\CoaMap::create()->mapForm($form->getValues(), $this->getCoa());
 
+        /** @var \Tk\Form\Field\File $image */
+        $image = $form->getField('background');
+
         // Do Custom Validations
+        if ($image->hasFile() && !preg_match('/\.(gif|jpe?g|png)$/i', $image->getValue())) {
+            $form->addFieldError('background', 'Please Select a valid image file. (jpg, png, gif)');
+        }
 
         $form->addFieldErrors($this->getCoa()->validate());
         if ($form->hasErrors()) {
@@ -100,7 +113,8 @@ JS;
         $isNew = (bool)$this->getCoa()->getId();
         $this->getCoa()->save();
 
-        // Do Custom data saving
+        $image->saveFile();
+
 
         \Tk\Alert::addSuccess('Record saved!');
         $event->setRedirect($this->getBackUrl());
