@@ -28,28 +28,34 @@ class Coa extends \Bs\FormIface
     public function init()
     {
 
+        $tab = 'Details';
+        
         $list = array('Company' => 'company', 'Staff' => 'staff', 'Student' => 'student');
-        $this->appendField(new Field\Select('type', $list))->prependOption('-- Select --', '');
+        $this->appendField(new Field\Select('type', $list))->prependOption('-- Select --', '')->setTabGroup($tab)
+            ->setNotes('Select the user type that this certificate will be sent to.');
         //$this->appendField(new Field\Input('type'));
-        $this->appendField(new Field\Input('subject'));
+        $this->appendField(new Field\Input('subject'))->setTabGroup($tab);
 
-        $this->form->addField(new Field\File('background', $this->getCoa()->getDataPath()))
+
+        $this->form->addField(new Field\File('background', $this->getCoa()->getDataPath()))->setTabGroup($tab)
             ->setMaxFileSize($this->getConfig()->get('upload.profile.imagesize'))->setAttr('accept', '.png,.jpg,.jpeg,.gif')
             ->addCss('tk-imageinput')
-            ->setNotes('Upload the background image for the certificate (Recommended Size: 1300x850)');
+            ->setNotes('Upload the background image for the certificate (Recommended Size: 1300x850). Note: Save the record after selecting the image so it is applied to the certificate template in the next tab.');
 
-        $htmlEl = $this->appendField(new Field\Textarea('html'))
+        $tab = 'Certificate';
+        $htmlEl = $this->appendField(new Field\Textarea('html'))->setTabGroup($tab)
             ->addCss('mce')->setAttr('data-elfinder-path', $this->getCoa()->getProfile()->getInstitution()->getDataPath().'/media');
         if ($this->getCoa()->getBackgroundUrl()) {
             $htmlEl->setAttr('data-background-image', $this->getCoa()->getBackgroundUrl());
         }
-        $this->appendField(new Field\Textarea('emailHtml'))
+
+        $tab = 'Email Template';
+        $this->appendField(new Field\Textarea('emailHtml'))->setTabGroup($tab)
             ->addCss('mce-med')->setAttr('data-elfinder-path', $this->getCoa()->getProfile()->getInstitution()->getDataPath().'/media');
 
         $this->appendField(new Event\Submit('update', array($this, 'doSubmit')));
         $this->appendField(new Event\Submit('save', array($this, 'doSubmit')));
         $this->appendField(new Event\Link('cancel', $this->getBackUrl()));
-
 
 
         $js = <<<JS
@@ -72,8 +78,6 @@ jQuery(function ($) {
 });
 JS;
         $this->getRenderer()->getTemplate()->appendJs($js);
-
-
 
     }
 

@@ -103,9 +103,11 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      */
     public function getBackgroundUrl()
     {
+        $url = null;
         if (is_file($this->getConfig()->getDataPath() . $this->background)) {
-            return \Uni\Uri::create($this->getConfig()->getDataUrl() . $this->background);
+            $url = \Uni\Uri::create($this->getConfig()->getDataUrl() . $this->background);
         }
+        return $url;
     }
 
     

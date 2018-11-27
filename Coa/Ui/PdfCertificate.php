@@ -83,7 +83,6 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
      */
     protected function initPdf()
     {
-
         $html = $this->show()->toString();
         $this->mpdf = new \Mpdf\Mpdf(array(
             'margin_left' => 0,
@@ -158,7 +157,7 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
         $template->appendHtml('content', $this->getCoa()->html);
 
         if ($this->getCoa()->getBackgroundUrl()) {
-            $template->setAttr('body', 'style', 'background-image: url(\''.$this->getCoa()->getBackgroundUrl().'\');background-image-resize: 4; background-image-resolution: from-image;');
+            $template->setAttr('body', 'style', 'background-image: url('.$this->getCoa()->getBackgroundUrl().');background-image-resize: 4; background-image-resolution: from-image;');
         }
 
         return $template;
@@ -180,10 +179,7 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
   <title></title>
 </head>
 <body class="" style="" var="body">
-  
-  
   <div var="content"></div>
-  
 </body>
 </html>
 HTML;
