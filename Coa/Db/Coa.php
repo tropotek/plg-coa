@@ -33,6 +33,11 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     /**
      * @var string
      */
+    public $background = '';
+
+    /**
+     * @var string
+     */
     public $html = '';
 
     /**
@@ -77,7 +82,16 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         }
         return $this->profile;
     }
-    
+
+    /**
+     *
+     *
+     * @return \Uni\Uri
+     */
+    public function getBackgroundUrl()
+    {
+        return \Uni\Uri::create('/');
+    }
 
     
     /**

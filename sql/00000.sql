@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS coa (
 
   type VARCHAR(32) NOT NULL DEFAULT 'company',            -- company (default), staff, student
   subject VARCHAR(255) NOT NULL DEFAULT '',               -- allow curlyBrackets {company.name}
+  background VARCHAR(255) NOT NULL DEFAULT '',            -- Background image for PDF
   html TEXT,                                              -- allow curlyBrackets {company.name} (Will be converted to the PDF html2pdf)
   email_html TEXT,                                        -- The email curlyTemplate
 

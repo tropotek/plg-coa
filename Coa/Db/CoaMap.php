@@ -26,6 +26,7 @@ class CoaMap extends Mapper
             $this->dbMap->addPropertyMap(new Db\Integer('id'), 'key');
             $this->dbMap->addPropertyMap(new Db\Integer('profileId', 'profile_id'));
             $this->dbMap->addPropertyMap(new Db\Text('type'));
+            $this->dbMap->addPropertyMap(new Db\Text('background'));
             $this->dbMap->addPropertyMap(new Db\Text('subject'));
             $this->dbMap->addPropertyMap(new Db\Text('html'));
             $this->dbMap->addPropertyMap(new Db\Text('emailHtml', 'email_html'));
@@ -46,6 +47,7 @@ class CoaMap extends Mapper
             $this->formMap->addPropertyMap(new Form\Integer('id'), 'key');
             $this->formMap->addPropertyMap(new Form\Integer('profileId'));
             $this->formMap->addPropertyMap(new Form\Text('type'));
+            $this->formMap->addPropertyMap(new Form\Text('background'));
             $this->formMap->addPropertyMap(new Form\Text('subject'));
             $this->formMap->addPropertyMap(new Form\Text('html'));
             $this->formMap->addPropertyMap(new Form\Text('emailHtml'));

@@ -32,8 +32,9 @@ class Coa extends \Bs\FormIface
         $this->appendField(new Field\Select('type', $list))->prependOption('-- Select --', '');
         //$this->appendField(new Field\Input('type'));
         $this->appendField(new Field\Input('subject'));
-        $this->appendField(new Field\Textarea('html'))->addCss('mce');
-        $this->appendField(new Field\Textarea('emailHtml'))->addCss('mce-med')->setAttr('data-background-image', '/~mifsudm/Unimelb/ems/data/media/dvm34PdfBg.png');
+        $this->appendField(new Field\Textarea('html'))->addCss('mce')->setAttr('data-elfinder-path', $this->getCoa()->getProfile()->getInstitution()->getDataPath().'/media');
+        $this->appendField(new Field\Textarea('emailHtml'))->addCss('mce-med')->setAttr('data-elfinder-path', $this->getCoa()->getProfile()->getInstitution()->getDataPath().'/media')
+            ->setAttr('data-background-image', '/~mifsudm/Unimelb/ems/data/media/dvm34PdfBg.png');
 
         $this->appendField(new Event\Submit('update', array($this, 'doSubmit')));
         $this->appendField(new Event\Submit('save', array($this, 'doSubmit')));
