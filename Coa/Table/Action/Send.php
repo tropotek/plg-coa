@@ -85,7 +85,7 @@ class Send extends \Tk\Table\Action\Button
         if (isset($request[$this->checkboxName]) && is_array($request[$this->checkboxName])) {
             $fullList = array();
             foreach($list as $obj) {
-                if (in_array($obj->getId(), $request[$this->checkboxName]))
+                if (in_array($obj->id, $request[$this->checkboxName]))
                     $fullList[] = $obj;
             }
         } else if ($list && is_object($list) && $list->countAll() > $list->count()) {
