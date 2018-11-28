@@ -34,6 +34,6 @@
         "ttek/tk-framework": "~2.0",
         "ttek/tk-uni": "~2.0",
         "ttek/tk-installers": "~2.0",
-        "mpdf/mpdf": "~7.0.0"
+        "mpdf/mpdf": "~7.0"
     }
 }

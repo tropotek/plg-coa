@@ -56,7 +56,7 @@ class Company extends \Uni\Controller\AdminManagerIface
     public function show()
     {
 
-        $this->getActionPanel()->add(\Tk\Ui\Button::create('Send', \Tk\Uri::create()->set('send'), 'fa fa-send'))->setAttr('title', 'Send to selected');
+        //$this->getActionPanel()->add(\Tk\Ui\Button::create('Send', \Tk\Uri::create()->set('send'), 'fa fa-send'))->setAttr('title', 'Send to selected');
 
         $template = parent::show();
 

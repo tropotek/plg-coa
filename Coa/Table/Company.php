@@ -46,9 +46,14 @@ class Company extends \Uni\TableIface
         // Filters
         $this->appendFilter(new Field\Input('keywords'))->setAttr('placeholder', 'Search');
         $this->appendFilter(new Field\DateRange('date'));
+        $subject = $this->getConfig()->getSubject();
         $value = array(
             'dateStart' => '01/01/' . date('Y'),
             'dateEnd' => '31/12/' . date('Y')
+        );
+        $value = array(
+            'dateStart' => $subject->dateStart->format(\Tk\Date::FORMAT_SHORT_DATE),
+            'dateEnd' => $subject->dateEnd->format(\Tk\Date::FORMAT_SHORT_DATE)
         );
         $this->getFilterForm()->load($value);
 
