@@ -62,12 +62,12 @@ jQuery(function ($) {
   // Add background image to the <body> tag of the MCE editor
   $('#coa-html').tinymce().on('init', function (e) {
     var body = this.dom.getRoot(); 
-    ed.dom.setStyle(body, 'background-image', "url('"+$(this.targetElm).data('backgroundImage')+"')");
-    ed.dom.setStyle(body, 'background-repeat', "no-repeat");
-    ed.dom.setStyle(body, 'background-size', "1300px 850px");
-    ed.dom.setStyle(body, 'width', "1300px");
-    ed.dom.setStyle(body, 'height', "850px");
-    ed.dom.setStyle(body, 'background-color', "#EFEFEF");
+    this.dom.setStyle(body, 'background-image', "url('"+$(this.targetElm).data('backgroundImage')+"')");
+    this.dom.setStyle(body, 'background-repeat', "no-repeat");
+    this.dom.setStyle(body, 'background-size', "1300px 850px");
+    this.dom.setStyle(body, 'width', "1300px");
+    this.dom.setStyle(body, 'height', "850px");
+    this.dom.setStyle(body, 'background-color', "#EFEFEF");
   });
 });
 JS;

@@ -51,6 +51,8 @@ abstract class Iface extends \Tk\Collection
     {
         $this->model = $model;
         $this->replace((array)$this->model);
+        $this->set('year', date('Y'));
+        $this->set('date', date(\Tk\Date::FORMAT_SHORT_DATE));
         return $this;
     }
 
