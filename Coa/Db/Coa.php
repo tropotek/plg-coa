@@ -110,6 +110,24 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         return $url;
     }
 
+
+    public function createPdfAdapter($model)
+    {
+        switch ($this->type) {
+            case 'staff':
+                $adapter = new \Coa\Adapter\User($this, $model);
+                break;
+            case 'student':
+                $adapter = new \Coa\Adapter\User($this, $model);
+                break;
+            case 'company':
+            default:
+                $adapter = new \Coa\Adapter\Company($this, $model);
+                break;
+        }
+        return $adapter;
+    }
+
     
     /**
      * @return array

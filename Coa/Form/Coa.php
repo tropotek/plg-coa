@@ -36,8 +36,7 @@ class Coa extends \Bs\FormIface
         //$this->appendField(new Field\Input('type'));
         $this->appendField(new Field\Input('subject'))->setTabGroup($tab);
 
-
-        $this->form->addField(new Field\File('background', $this->getCoa()->getDataPath()))->setTabGroup($tab)
+        $this->addField(new Field\File('background', $this->getCoa()->getDataPath()))->setTabGroup($tab)
             ->setMaxFileSize($this->getConfig()->get('upload.profile.imagesize'))->setAttr('accept', '.png,.jpg,.jpeg,.gif')
             ->addCss('tk-imageinput')
             ->setNotes('Upload the background image for the certificate (Recommended Size: 1300x850). Note: Save the record after selecting the image so it is applied to the certificate template in the next tab.');
@@ -60,11 +59,8 @@ class Coa extends \Bs\FormIface
 
         $js = <<<JS
 jQuery(function ($) {
-  
-  var ed = $('#coa-html').tinymce();
-  ed.on('init', function (e) {
-    //console.log($(this.targetElm).data('backgroundImage'));
-    //console.log(this.dom.getRoot());
+  // Add background image to the <body> tag of the MCE editor
+  $('#coa-html').tinymce().on('init', function (e) {
     var body = this.dom.getRoot(); 
     ed.dom.setStyle(body, 'background-image', "url('"+$(this.targetElm).data('backgroundImage')+"')");
     ed.dom.setStyle(body, 'background-repeat', "no-repeat");
@@ -72,9 +68,7 @@ jQuery(function ($) {
     ed.dom.setStyle(body, 'width', "1300px");
     ed.dom.setStyle(body, 'height', "850px");
     ed.dom.setStyle(body, 'background-color', "#EFEFEF");
-    
   });
-  
 });
 JS;
         $this->getRenderer()->getTemplate()->appendJs($js);

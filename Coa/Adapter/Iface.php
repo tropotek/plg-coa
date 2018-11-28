@@ -7,7 +7,7 @@ namespace Coa\Adapter;
  * @link http://www.tropotek.com/
  * @license Copyright 2018 Michael Mifsud
  */
-abstract class Iface
+abstract class Iface extends \Tk\Collection
 {
     /**
      * @var \Coa\Db\Coa
@@ -27,26 +27,13 @@ abstract class Iface
      */
     public function __construct($coa, $model)
     {
+        parent::__construct();
         $this->setCoa($coa);
         $this->setModel($model);
         if (!$this->model) {
             throw new \Tk\Exception('Invalid model for this adapter');
         }
     }
-
-
-    /**
-     * return an array that will replace the template curly brace parameters
-     * EG
-     *   {name}, {cpd}, {dateFrom}
-     *
-     * return:
-     *   array('name' => 'Some Name', 'cpd' => 15, 'dateFrom' => '15 Mar 2019');
-     *
-     * @return array|string[]
-     */
-    abstract public function getTemplateVars();
-
 
     /**
      * @return \Tk\Db\Map\Model|\Tk\Db\ModelInterface
@@ -63,6 +50,7 @@ abstract class Iface
     protected function setModel($model)
     {
         $this->model = $model;
+        $this->replace((array)$this->model);
         return $this;
     }
 

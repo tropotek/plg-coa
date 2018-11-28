@@ -52,10 +52,6 @@ class Edit extends \Uni\Controller\AdminEditIface
         /** @var \Coa\Adapter\Iface $adapter */
         $adapter = null;
         switch ($this->coa->type) {
-            case 'company':
-                $company = \App\Db\CompanyMap::create()->findFiltered(array('profileId' => $this->coa->profileId), \Tk\Db\Tool::create('RAND()'))->current();
-                $adapter = new \Coa\Adapter\Company($this->coa, $company);
-                break;
             case 'staff':
                 $staff = \App\Db\UserMap::create()->findFiltered(array('profileId' => $this->coa->profileId, 'type' => \Uni\Db\Role::TYPE_STAFF), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\User($this->coa, $staff);
@@ -64,10 +60,18 @@ class Edit extends \Uni\Controller\AdminEditIface
                 $student = \App\Db\UserMap::create()->findFiltered(array('subjectId' => $this->getConfig()->getSubjectId(), 'type' => \Uni\Db\Role::TYPE_STUDENT), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\User($this->coa, $student);
                 break;
+            case 'company':
+            default:
+                $company = \App\Db\CompanyMap::create()->findFiltered(array('profileId' => $this->coa->profileId), \Tk\Db\Tool::create('RAND()'))->current();
+                $adapter = new \Coa\Adapter\Company($this->coa, $company);
+                break;
         }
+        $adapter->set('dateFrom', '01/01/'.date('Y'));
+        $adapter->set('dateTo', '31/12/'.date('Y'));
+
 
         $ren =  \Coa\Ui\PdfCertificate::create($adapter, 'Sample');
-        //$ren->output();     // comment this to see html version
+        $ren->output();     // comment this to see html version
         return $ren->show();
     }
 

@@ -84,6 +84,11 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
     protected function initPdf()
     {
         $html = $this->show()->toString();
+
+        $tpl = \Tk\CurlyTemplate::create($html);
+        //vd($this->adapter->all());
+        $html = $tpl->parse($this->adapter->all());
+
         $this->mpdf = new \Mpdf\Mpdf(array(
             'margin_left' => 0,
             'margin_right' => 0,
@@ -163,7 +168,6 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
         return $template;
     }
 
-
     /**
      * DomTemplate magic method
      *
@@ -186,7 +190,6 @@ HTML;
 
         return \Dom\Loader::load($xhtml);
     }
-
 
     /**
      * @return \App\Config|\Tk\Config

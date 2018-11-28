@@ -11,40 +11,31 @@ class Company extends Iface
 {
 
 
-
-
     /**
      * @param null|\Tk\Db\Map\Model|\Tk\Db\ModelInterface $model
      * @return Iface
+     * @throws \Exception
      */
     protected function setModel($model)
     {
-        if ($model instanceof \App\Db\Company)
-            $this->model = $model;
+        parent::setModel($model);
+        $totals = current(\App\Db\CompanyMap::create()->findFilteredWithTotals(array('id' => $model->id)));
+        if ($totals) {
+            $this->replace((array)$totals);
+        }
         return $this;
     }
 
     /**
-     * @return null|\Tk\Db\Map\Model|\Tk\Db\ModelInterface|\App\Db\Company
-     */
-    public function getCompany()
-    {
-        return $this->getModel();
-    }
-
-
-    /**
-     * return an array that will replace the template curly brace parameters
-     * EG
-     *   {name}, {cpd}, {dateFrom}
+     * Calculate the Cpd based on the total number of placement units
      *
-     * return:
-     *   array('name' => 'Some Name', 'cpd' => 15, 'dateFrom' => '15 Mar 2019');
      *
-     * @return array|string[]
+     * @param $totalUnits
+     * @return int
      */
-    public function getTemplateVars()
+    static function calculateCpd($totalUnits)
     {
-        return array();
+        $cpd = ($totalUnits * 5);
+        return ($cpd > 20) ? 20 : $cpd;
     }
 }

@@ -107,7 +107,6 @@ class CoaMap extends Mapper
             $where .= sprintf('a.subject = %s AND ', $this->quote($filter['subject']));
         }
 
-
         if (!empty($filter['exclude'])) {
             $w = $this->makeMultiQuery($filter['exclude'], 'a.id', 'AND', '!=');
             if ($w) $where .= '('. $w . ') AND ';
@@ -120,5 +119,6 @@ class CoaMap extends Mapper
 
         return $where;
     }
+
 
 }
