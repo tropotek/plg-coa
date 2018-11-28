@@ -28,6 +28,3 @@ $message->set('cpd', \cpd\Db\CpdSetup::calculateCpd($obj->totalUnits));
 
 
 
-
-
-
