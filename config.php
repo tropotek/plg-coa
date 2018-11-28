@@ -19,3 +19,7 @@ $routes->add('staff-coa-edit', new \Tk\Routing\Route('/staff/{subjectCode}/coaEd
 $routes->add('staff-coa-company', new \Tk\Routing\Route('/staff/{subjectCode}/coaCompany.html', 'Coa\Controller\Company::doDefault', $params));
 $routes->add('staff-coa-staff', new \Tk\Routing\Route('/staff/{subjectCode}/coaStaff.html', 'Coa\Controller\Staff::doDefault', $params));
 $routes->add('staff-coa-student', new \Tk\Routing\Route('/staff/{subjectCode}/coaStudent.html', 'Coa\Controller\Student::doDefault', $params));
+
+
+
+
