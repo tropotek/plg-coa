@@ -92,5 +92,5 @@ class Plugin extends \App\Plugin\Iface
     }
 
 
-    
+
 }
