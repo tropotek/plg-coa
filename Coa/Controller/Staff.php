@@ -3,12 +3,13 @@ namespace Coa\Controller;
 
 
 
+
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Company extends \Uni\Controller\AdminManagerIface
+class Staff extends \Uni\Controller\AdminManagerIface
 {
 
     /**
@@ -21,7 +22,7 @@ class Company extends \Uni\Controller\AdminManagerIface
      */
     public function __construct()
     {
-        $this->setPageTitle('Send To Company');
+        $this->setPageTitle('Send To Staff');
     }
 
     /**
@@ -37,13 +38,25 @@ class Company extends \Uni\Controller\AdminManagerIface
             $this->getConfig()->getBackUrl()->redirect();
         }
 
-        $this->table = \Coa\Table\Company::create();
+        $this->table = \Uni\Table\User::create();
         $this->table->init();
+
+        $this->table->removeAction('delete');
+        $this->table->removeCell('actions');
+        $this->table->removeCell('username');
+        $this->table->removeCell('phone');
+        $this->table->removeCell('role');
+        $this->table->removeCell('active');
+        $this->table->removeCell('created');
+
+        if ($this->coa)
+            $this->table->prependAction(\Coa\Table\Action\Send::create($this->coa));
 
 
         $filter = array(
             'profileId' => $this->getConfig()->getProfileId(),
-            'hasEmail' => true
+            'type' => \Uni\Db\Role::TYPE_STAFF,
+            'active' => true
         );
         $this->table->setList($this->table->findList($filter));
 
@@ -54,8 +67,6 @@ class Company extends \Uni\Controller\AdminManagerIface
      */
     public function show()
     {
-
-        //$this->getActionPanel()->add(\Tk\Ui\Button::create('Send', \Tk\Uri::create()->set('send'), 'fa fa-send'))->setAttr('title', 'Send to selected');
 
         $template = parent::show();
 
@@ -73,10 +84,7 @@ class Company extends \Uni\Controller\AdminManagerIface
     {
         $xhtml = <<<HTML
 <div>
-  <div class="tk-panel" data-panel-icon="fa fa-certificate" var="table">
-    <p>&nbsp;</p>
-    <p><small>*Note: Table only shows companies with a valid email</small></p>
-  </div>
+  <div class="tk-panel" data-panel-icon="fa fa-certificate" var="table"></div>
 </div>
 HTML;
 

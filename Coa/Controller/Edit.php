@@ -82,7 +82,7 @@ class Edit extends \Uni\Controller\AdminEditIface
     public function show()
     {
         if ($this->coa->getId()) {
-            $this->getActionPanel()->add(\Tk\Ui\Button::create('Preview', \Uni\Uri::create()->set('preview'), 'fa fa-eye'))->setAttr('target', '_blank');
+            $this->getActionPanel()->add(\Tk\Ui\Button::create('Preview', \Uni\Uri::create()->set('preview')->noCrumb(), 'fa fa-eye'))->setAttr('target', '_blank');
             $this->getActionPanel()->add(\Tk\Ui\Button::create('Send To',
                 \Uni\Uri::createSubjectUrl($this->getRecipientSelectUrl($this->coa->type))
                     ->set('coaId', $this->coa->getId()), 'fa fa-envelope-o'));
