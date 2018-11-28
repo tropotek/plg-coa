@@ -90,13 +90,14 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
         $html = $tpl->parse($this->adapter->all());
 
         $this->mpdf = new \Mpdf\Mpdf(array(
+			'format' => 'A4-L',
+            'orientation' => 'L',
             'margin_left' => 0,
             'margin_right' => 0,
             'margin_top' => 0,
             'margin_bottom' => 0,
             'margin_header' => 0,
             'margin_footer' => 0,
-            'orientation' => 'L',
             'tempDir' => $this->getConfig()->getTempPath()
         ));
         $mpdf = $this->mpdf;
