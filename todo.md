@@ -1,11 +1,6 @@
 #TODO
 
-
- - __CPD Plugin:__ Plugin that adds the ability to publish and email Certificates of CPD as
-   PDF attachments to supervisors. Plugin that adds the ability to publish and email
-   Certificated of Appreciation as PDF attachments (See EMS II)
    
-    
     
     
     
