@@ -1,5 +1,10 @@
 #CHANGELOG#
 
+Ver 2.0.8 [2018-11-29]:
+-------------------------------
+  - Fixed issue with COA Send function
+
+
 Ver 2.0.6 [2018-11-29]:
 -------------------------------
   - Added user COA to plugin
