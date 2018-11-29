@@ -1,7 +1,6 @@
 <?php
 namespace Coa\Table\Action;
 
-use \Tk\Table\Cell;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -181,8 +180,8 @@ class Send extends \Tk\Table\Action\Button
      */
     public function show()
     {
-        $this->setAttr('title', 'Email certificate to selected companies.');
-        $this->setAttr('data-confirm', 'Please Confirm: Send certificates to selected companies?');
+        $this->setAttr('title', 'Email certificate to selected recipients.');
+        $this->setAttr('data-confirm', 'Please Confirm: Send certificates to selected recipients?');
 
         $template = parent::show();
 
