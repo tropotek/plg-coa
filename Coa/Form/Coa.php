@@ -19,7 +19,7 @@ use Tk\Form;
  * @link http://tropotek.com.au/
  * @license Copyright 2018 Tropotek
  */
-class Coa extends \Bs\FormIface
+class Coa extends \Uni\FormIface
 {
 
     /**
@@ -27,10 +27,10 @@ class Coa extends \Bs\FormIface
      */
     public function init()
     {
-
         $tab = 'Details';
         
-        $list = array('Company' => 'company', 'Staff' => 'staff', 'Student' => 'student');
+        $list = array(
+            'Supervisor' => \Coa\Db\Coa::TYPE_SUPERVISOR, 'Company' => \Coa\Db\Coa::TYPE_COMPANY, 'Staff' => \Coa\Db\Coa::TYPE_STAFF, 'Student' => \Coa\Db\Coa::TYPE_STUDENT);
         $this->appendField(new Field\Select('type', $list))->setLabel('Recipient Type')->prependOption('-- Select --', '')->setTabGroup($tab)
             ->setNotes('Select the user type that this certificate will be sent to.');
         //$this->appendField(new Field\Input('type'));

@@ -3,13 +3,12 @@ namespace Coa\Controller;
 
 
 
-
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class Staff extends \Uni\Controller\AdminManagerIface
+class Supervisor extends \Uni\Controller\AdminManagerIface
 {
 
     /**
@@ -22,7 +21,7 @@ class Staff extends \Uni\Controller\AdminManagerIface
      */
     public function __construct()
     {
-        $this->setPageTitle('Send To Staff');
+        $this->setPageTitle('Send To Supervisor');
     }
 
     /**
@@ -38,15 +37,12 @@ class Staff extends \Uni\Controller\AdminManagerIface
             $this->getConfig()->getBackUrl()->redirect();
         }
 
-        $this->table = \Uni\Table\User::create();
+        $this->table = \App\Table\Supervisor::createDynamicTable($this->getConfig()->getUrlName(), 'App\Db\Supervisor', $this->getConfig()->getProfileId());
         $this->table->init();
 
         $this->table->removeAction('delete');
-        $this->table->removeCell('actions');
-        $this->table->removeCell('username');
-        $this->table->removeCell('phone');
-        $this->table->removeCell('role');
-        $this->table->removeCell('active');
+        $this->table->removeCell('accom');
+        $this->table->removeCell('modified');
         $this->table->removeCell('created');
 
         if ($this->coa)
@@ -54,8 +50,7 @@ class Staff extends \Uni\Controller\AdminManagerIface
 
         $filter = array(
             'profileId' => $this->getConfig()->getProfileId(),
-            'type' => \Uni\Db\Role::TYPE_STAFF,
-            'active' => true
+            'hasEmail' => true
         );
         $this->table->setList($this->table->findList($filter));
 
@@ -66,6 +61,7 @@ class Staff extends \Uni\Controller\AdminManagerIface
      */
     public function show()
     {
+        //$this->getActionPanel()->add(\Tk\Ui\Button::create('Send', \Tk\Uri::create()->set('send'), 'fa fa-send'))->setAttr('title', 'Send to selected');
 
         $template = parent::show();
 
@@ -83,7 +79,10 @@ class Staff extends \Uni\Controller\AdminManagerIface
     {
         $xhtml = <<<HTML
 <div>
-  <div class="tk-panel" data-panel-icon="fa fa-certificate" var="table"></div>
+  <div class="tk-panel" data-panel-icon="fa fa-certificate" var="table">
+    <p>&nbsp;</p>
+    <p><small>*Note: Table only shows supervisors with a valid email</small></p>
+  </div>
 </div>
 HTML;
 

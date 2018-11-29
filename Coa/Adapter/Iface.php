@@ -33,6 +33,10 @@ abstract class Iface extends \Tk\Collection
         if (!$this->model) {
             throw new \Tk\Exception('Invalid model for this adapter');
         }
+
+        // Init the default template vars
+        $this->set('year', date('Y'));
+        $this->set('date', date(\Tk\Date::FORMAT_SHORT_DATE));
     }
 
     /**
@@ -51,8 +55,6 @@ abstract class Iface extends \Tk\Collection
     {
         $this->model = $model;
         $this->replace((array)$this->model);
-        $this->set('year', date('Y'));
-        $this->set('date', date(\Tk\Date::FORMAT_SHORT_DATE));
         return $this;
     }
 

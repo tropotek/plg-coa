@@ -52,6 +52,14 @@ class Edit extends \Uni\Controller\AdminEditIface
         /** @var \Coa\Adapter\Iface $adapter */
         $adapter = null;
         switch ($this->coa->type) {
+            case 'supervisor':
+                $supervisor = \App\Db\SupervisorMap::create()->findFiltered(array('subjectId' => $this->getConfig()->getSubjectId(), 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
+                $adapter = new \Coa\Adapter\Supervisor($this->coa, $supervisor);
+                break;
+            case 'company':
+                $company = \App\Db\CompanyMap::create()->findFiltered(array('profileId' => $this->coa->profileId, 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
+                $adapter = new \Coa\Adapter\Company($this->coa, $company);
+                break;
             case 'staff':
                 $staff = \App\Db\UserMap::create()->findFiltered(array('profileId' => $this->coa->profileId, 'type' => \Uni\Db\Role::TYPE_STAFF), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\User($this->coa, $staff);
@@ -60,17 +68,18 @@ class Edit extends \Uni\Controller\AdminEditIface
                 $student = \App\Db\UserMap::create()->findFiltered(array('subjectId' => $this->getConfig()->getSubjectId(), 'type' => \Uni\Db\Role::TYPE_STUDENT), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\User($this->coa, $student);
                 break;
-            case 'company':
-            default:
-                $company = \App\Db\CompanyMap::create()->findFiltered(array('profileId' => $this->coa->profileId), \Tk\Db\Tool::create('RAND()'))->current();
-                $adapter = new \Coa\Adapter\Company($this->coa, $company);
-                break;
         }
-        $adapter->set('dateFrom', '01/01/'.date('Y'));
-        $adapter->set('dateTo', '31/12/'.date('Y'));
+        if (!$adapter) {
+            //return '<h2>Cannot find an Adapter object for this COA Type: ' . $this->coa->type . '</h2>';
+            throw new \Tk\Exception('Cannot find an Adapter object for this COA Type: ' . $this->coa->type );
+        }
+        $value = array(
+            'dateStart' => $this->getConfig()->getSubject()->dateStart->format(\Tk\Date::FORMAT_SHORT_DATE),
+            'dateEnd' => $this->getConfig()->getSubject()->dateEnd->format(\Tk\Date::FORMAT_SHORT_DATE)
+        );
+        $adapter->replace($value);
 
-
-        $ren =  \Coa\Ui\PdfCertificate::create($adapter, 'Sample');
+        $ren = \Coa\Ui\PdfCertificate::create($adapter, 'Sample');
         $ren->output();     // comment this to see html version
         return $ren->show();
     }
@@ -101,12 +110,18 @@ class Edit extends \Uni\Controller\AdminEditIface
      */
     private function getRecipientSelectUrl($type)
     {
-        $url = '/coaCompany.html';
+        $url = '/coaSupervisor.html';
         switch ($type) {
-            case 'staff':
+            case \Coa\Db\Coa::TYPE_SUPERVISOR:
+                $url = '/coaSupervisor.html';
+                break;
+            case \Coa\Db\Coa::TYPE_COMPANY:
+                $url = '/coaCompany.html';
+                break;
+            case \Coa\Db\Coa::TYPE_STAFF:
                 $url = '/coaStaff.html';
                 break;
-            case 'student':
+            case \Coa\Db\Coa::TYPE_STUDENT:
                 $url = '/coaStudent.html';
                 break;
         }

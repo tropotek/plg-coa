@@ -10,14 +10,13 @@ namespace Coa\Adapter;
 class User extends Iface
 {
 
-
     /**
-     * @return null|\Tk\Db\Map\Model|\Tk\Db\ModelInterface|\App\Db\User
+     * @param null|\Tk\Db\Map\Model|\Tk\Db\ModelInterface|\App\Db\User $model
+     * @return User|Iface
      */
-    public function getUser()
+    protected function setModel($model)
     {
-        return $this->getModel();
+        return parent::setModel($model);
     }
-
     
 }

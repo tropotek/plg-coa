@@ -86,8 +86,7 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
         $html = $this->show()->toString();
 
         $tpl = \Tk\CurlyTemplate::create($html);
-        //vd($this->adapter->all());
-        $html = $tpl->parse($this->adapter->all());
+        $parsedHtml = $tpl->parse($this->adapter->all());
 
         $this->mpdf = new \Mpdf\Mpdf(array(
 			'format' => 'A4-L',
@@ -119,7 +118,7 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
             $mpdf->watermarkTextAlpha = 0.1;
         }
         $mpdf->SetDisplayMode('fullpage');
-        $mpdf->WriteHTML($html);
+        $mpdf->WriteHTML($parsedHtml);
     }
 
     /**

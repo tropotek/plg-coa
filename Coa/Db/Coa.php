@@ -10,6 +10,12 @@ namespace Coa\Db;
 class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
 {
 
+    const TYPE_SUPERVISOR   = 'supervisor';
+    const TYPE_COMPANY      = 'company';
+    const TYPE_STAFF        = 'staff';
+    const TYPE_STUDENT      = 'student';
+
+
     /**
      * @var int
      */
@@ -23,7 +29,7 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     /**
      * @var string
      */
-    public $type = 'company';
+    public $type = self::TYPE_SUPERVISOR;
 
     /**
      * @var string
@@ -110,19 +116,25 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
         return $url;
     }
 
-
+    /**
+     * @param \Tk\Db\Map\Model|\Tk\Db\ModelInterface $model
+     * @return \Coa\Adapter\Company|\Coa\Adapter\Supervisor|\Coa\Adapter\User
+     * @throws \Tk\Exception
+     */
     public function createPdfAdapter($model)
     {
         switch ($this->type) {
-            case 'staff':
-                $adapter = new \Coa\Adapter\User($this, $model);
+            case self::TYPE_SUPERVISOR:
+                $adapter = new \Coa\Adapter\Supervisor($this, $model);
                 break;
-            case 'student':
-                $adapter = new \Coa\Adapter\User($this, $model);
-                break;
-            case 'company':
-            default:
+            case self::TYPE_COMPANY:
                 $adapter = new \Coa\Adapter\Company($this, $model);
+                break;
+            case self::TYPE_STAFF:
+                $adapter = new \Coa\Adapter\User($this, $model);
+                break;
+            case self::TYPE_STUDENT:
+                $adapter = new \Coa\Adapter\User($this, $model);
                 break;
         }
         return $adapter;
@@ -141,6 +153,7 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
             $errors['profileId'] = 'Invalid value: profileId';
         }
 
+        // TODO: Check type exists in contants
         if (!$this->type) {
             $errors['type'] = 'Invalid value: type';
         }
