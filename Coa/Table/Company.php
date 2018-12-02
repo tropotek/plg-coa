@@ -54,9 +54,6 @@ class Company extends \Uni\TableIface
         $this->getFilterForm()->load($value);
 
 
-        $list = \App\Db\PlacementTypeMap::create()->findFiltered(array('profileId' => $this->getConfig()->getProfileId()));
-//        $this->appendFilter(new Field\CheckboxSelect('placementTypeId', $list));
-
         // Actions
         /** @var \Coa\Db\Coa $coa */
         $coa = \Coa\Db\CoaMap::create()->find($this->getConfig()->getRequest()->get('coaId'));
@@ -65,7 +62,6 @@ class Company extends \Uni\TableIface
 
         $this->appendAction(\Tk\Table\Action\Csv::create());
 
-        //$this->resetSessionTool();
 
         return $this;
     }

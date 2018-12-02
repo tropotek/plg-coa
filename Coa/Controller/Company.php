@@ -39,6 +39,7 @@ class Company extends \Uni\Controller\AdminManagerIface
 
         $this->table = \Coa\Table\Company::create();
         $this->table->init();
+        //$this->table->resetSessionOffset()->resetSessionTool();
 
 
         $filter = array(

@@ -53,7 +53,7 @@ class Edit extends \Uni\Controller\AdminEditIface
         $adapter = null;
         switch ($this->coa->type) {
             case 'supervisor':
-                $supervisor = \App\Db\SupervisorMap::create()->findFiltered(array('subjectId' => $this->getConfig()->getSubjectId(), 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
+                $supervisor = \App\Db\SupervisorMap::create()->findCpdTotals(array('subjectId' => $this->getConfig()->getSubjectId(), 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\Supervisor($this->coa, $supervisor);
                 break;
             case 'company':
