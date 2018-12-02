@@ -40,10 +40,21 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
         $this->table = \App\Table\Supervisor::createDynamicTable($this->getConfig()->getUrlName(), 'App\Db\Supervisor', $this->getConfig()->getProfileId());
         $this->table->init();
 
+//        $this->table->resetSessionTool();
+//        $this->table->resetSessionOffset();
+
         $this->table->removeAction('delete');
         $this->table->removeCell('accom');
         $this->table->removeCell('modified');
         $this->table->removeCell('created');
+        $this->table->appendCell(new \Tk\Table\Cell\Text('units'))->setOrderProperty('SUM(p.units)');
+        $this->table->appendCell(new \Tk\Table\Cell\Text('placements'))->setOrderProperty('COUNT(p.id)');
+        $this->table->appendCell(new \Tk\Table\Cell\Text('cpd'))->setOrderProperty('SUM(p.units)');
+
+        $this->table->appendFilter(new  \Tk\Form\Field\Input('minUnits'))->setAttr('placeholder', 'Min. Units');
+        $this->table->appendFilter(new  \Tk\Form\Field\Input('minPlacements'))->setAttr('placeholder', 'Min. Placements');
+        $this->table->appendFilter(new  \Tk\Form\Field\Input('minCpd'))->setAttr('placeholder', 'Min. Cpd');
+
 
         if ($this->coa)
             $this->table->prependAction(\Coa\Table\Action\Send::create($this->coa));
@@ -52,7 +63,14 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
             'profileId' => $this->getConfig()->getProfileId(),
             'hasEmail' => true
         );
-        $this->table->setList($this->table->findList($filter));
+
+        $tool = $this->table->getTool('created DESC');
+        $filter = array_merge($this->table->getFilterValues(), $filter);
+        $list = \App\Db\SupervisorMap::create()->findCpdTotals($filter, $tool);
+        $this->table->setList($list);
+
+
+        //$this->table->setList($this->table->findList($filter));
 
     }
 
