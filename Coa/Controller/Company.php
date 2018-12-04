@@ -37,10 +37,19 @@ class Company extends \Uni\Controller\AdminManagerIface
             $this->getConfig()->getBackUrl()->redirect();
         }
 
-        $this->table = \Coa\Table\Company::create();
+        $this->table = \App\Table\Company::createDynamicTable($this->getConfig()->getUrlName(), 'App\Db\Company', $this->getConfig()->getProfileId());
         $this->table->init();
-        //$this->table->resetSessionOffset()->resetSessionTool();
 
+        $this->table->appendFilter(new \Tk\Form\Field\DateRange('date'));
+        $subject = $this->getConfig()->getSubject();
+        $value = array(
+            'dateStart' => $subject->dateStart->format(\Tk\Date::FORMAT_SHORT_DATE),
+            'dateEnd' => $subject->dateEnd->format(\Tk\Date::FORMAT_SHORT_DATE)
+        );
+        $this->table->getFilterForm()->load($value);
+
+        if ($this->coa)
+            $this->table->prependAction(\Coa\Table\Action\Send::create($this->coa));
 
         $filter = array(
             'profileId' => $this->getConfig()->getProfileId(),

@@ -23,8 +23,6 @@ use Tk\Table\Cell;
 class Company extends \Uni\TableIface
 {
 
-
-
     /**
      * @return $this
      * @throws \Exception
@@ -33,7 +31,7 @@ class Company extends \Uni\TableIface
     {
     
         $this->appendCell(new Cell\Checkbox('id'));
-        $this->addCell($this->getActionCell());
+        $this->appendCell($this->getActionCell());
         $this->appendCell(new Cell\Text('name'))->addCss('key');
         $this->appendCell(new Cell\Text('status'));
         $this->appendCell(new Cell\Text('email'));
@@ -42,6 +40,8 @@ class Company extends \Uni\TableIface
 //        $this->appendCell(new Cell\Text('units'))->setOrderProperty('SUM(p.units)');
 //        $this->appendCell(new Cell\Text('placements'))->setOrderProperty('COUNT(p.id)');
 //        $this->appendCell(new Cell\Text('cpd'))->setOrderProperty('SUM(p.units)');
+
+        //$this->getFilterForm()->initForm();
 
         // Filters
         $this->appendFilter(new Field\Input('keywords'))->setAttr('placeholder', 'Search');
@@ -53,7 +53,6 @@ class Company extends \Uni\TableIface
         );
         $this->getFilterForm()->load($value);
 
-
         // Actions
         /** @var \Coa\Db\Coa $coa */
         $coa = \Coa\Db\CoaMap::create()->find($this->getConfig()->getRequest()->get('coaId'));
@@ -61,7 +60,6 @@ class Company extends \Uni\TableIface
             $this->appendAction(\Coa\Table\Action\Send::create($coa));
 
         $this->appendAction(\Tk\Table\Action\Csv::create());
-
 
         return $this;
     }

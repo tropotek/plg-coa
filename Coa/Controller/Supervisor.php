@@ -40,29 +40,38 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
         $this->table = \App\Table\Supervisor::createDynamicTable($this->getConfig()->getUrlName(), 'App\Db\Supervisor', $this->getConfig()->getProfileId());
         $this->table->init();
 
-//        $this->table->resetSessionTool()->table->resetSessionOffset();
-
         $this->table->removeAction('delete');
         $this->table->removeCell('accom');
+        $this->table->removeCell('status');
         $this->table->removeCell('modified');
         $this->table->removeCell('created');
         $this->table->appendCell(new \Tk\Table\Cell\Text('units'))->setOrderProperty('SUM(p.units)');
         $this->table->appendCell(new \Tk\Table\Cell\Text('placements'))->setOrderProperty('COUNT(p.id)');
         $this->table->appendCell(new \Tk\Table\Cell\Text('cpd'))->setOrderProperty('SUM(p.units)');
+        $this->table->removeFilter('status');
+        $this->table->removeFilter('graduationYear');
 
+
+        $this->table->appendFilter(new \Tk\Form\Field\DateRange('date'));
+        $subject = $this->getConfig()->getSubject();
+        $value = array(
+            'dateStart' => $subject->dateStart->format(\Tk\Date::FORMAT_SHORT_DATE),
+            'dateEnd' => $subject->dateEnd->format(\Tk\Date::FORMAT_SHORT_DATE)
+        );
+        $this->table->getFilterForm()->load($value);
 
         $list = \App\Db\PlacementTypeMap::create()->findFiltered(array('profileId' => $this->getConfig()->getProfileId()));
         $this->table->appendFilter(new \Tk\Form\Field\CheckboxSelect('placementTypeId', $list));
 
         $this->table->appendFilter(new  \Tk\Form\Field\Input('minUnits'))->setAttr('placeholder', 'Min. Units');
         $this->table->appendFilter(new  \Tk\Form\Field\Input('minPlacements'))->setAttr('placeholder', 'Min. Placements');
-        $this->table->appendFilter(new  \Tk\Form\Field\Input('minCpd'))->setAttr('placeholder', 'Min. Cpd');
-
+        //$this->table->appendFilter(new  \Tk\Form\Field\Input('minCpd'))->setAttr('placeholder', 'Min. Cpd');
 
         if ($this->coa)
             $this->table->prependAction(\Coa\Table\Action\Send::create($this->coa));
 
         $filter = array(
+            'status' => \App\Db\Supervisor::STATUS_APPROVED,
             'profileId' => $this->getConfig()->getProfileId(),
             'hasEmail' => true
         );
