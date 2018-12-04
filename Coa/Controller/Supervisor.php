@@ -45,8 +45,8 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
         $this->table->removeCell('status');
         $this->table->removeCell('modified');
         $this->table->removeCell('created');
-        $this->table->appendCell(new \Tk\Table\Cell\Text('units'))->setOrderProperty('SUM(p.units)');
         $this->table->appendCell(new \Tk\Table\Cell\Text('placements'))->setOrderProperty('COUNT(p.id)');
+        $this->table->appendCell(new \Tk\Table\Cell\Text('units'))->setOrderProperty('SUM(p.units)');
         $this->table->appendCell(new \Tk\Table\Cell\Text('cpd'))->setOrderProperty('SUM(p.units)');
         $this->table->removeFilter('status');
         $this->table->removeFilter('graduationYear');
@@ -63,8 +63,8 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
         $list = \App\Db\PlacementTypeMap::create()->findFiltered(array('profileId' => $this->getConfig()->getProfileId()));
         $this->table->appendFilter(new \Tk\Form\Field\CheckboxSelect('placementTypeId', $list));
 
-        $this->table->appendFilter(new  \Tk\Form\Field\Input('minUnits'))->setAttr('placeholder', 'Min. Units');
         $this->table->appendFilter(new  \Tk\Form\Field\Input('minPlacements'))->setAttr('placeholder', 'Min. Placements');
+        $this->table->appendFilter(new  \Tk\Form\Field\Input('minUnits'))->setAttr('placeholder', 'Min. Units');
         //$this->table->appendFilter(new  \Tk\Form\Field\Input('minCpd'))->setAttr('placeholder', 'Min. Cpd');
 
         if ($this->coa)
