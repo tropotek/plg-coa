@@ -10,10 +10,10 @@
         "EMS"
     ],
     "homepage": "http://www.tropotek.com/",
-    "time": "2017-09-27",
+    "time": "2018-12-06",
     "access": "admin, profile",
     "license": "MIT",
-    "version": "master",
+    "version": "2.0.14",
     "authors":  [
          {
             "name": "Michael Mifsud",
