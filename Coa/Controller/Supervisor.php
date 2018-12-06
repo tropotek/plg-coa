@@ -39,7 +39,7 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
 
         $this->table = \App\Table\Supervisor::createDynamicTable($this->getConfig()->getUrlName(), 'App\Db\Supervisor', $this->getConfig()->getProfileId());
         $this->table->init();
-        $this->table->resetSession();
+        //$this->table->resetSession();
 
         $this->table->removeAction('delete');
         $this->table->removeCell('accom');
