@@ -1,7 +1,6 @@
-# EMS III COA Plugin
+# EMS COA Plugin
 
 __Project:__ [ttek-plg/plg-coa](http://packagist.org/packages/ttek-plg/plg-coa)
-__Published:__ 01 Sep 2016
 __Web:__ <http://www.tropotek.com/>
 __Authors:__ Michael Mifsud <http://www.tropotek.com/>  
   
@@ -27,7 +26,7 @@ Or add the following to your composer.json file:
 
 ```json
 {
-  "ttek-plg/plg-coa": "~1.0"
+  "ttek-plg/plg-coa": "~3.0"
 }
 ```
 
