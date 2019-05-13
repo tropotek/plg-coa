@@ -3,6 +3,7 @@ namespace Coa\Listener;
 
 use Tk\Event\Subscriber;
 use Tk\Event\Event;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -21,12 +22,12 @@ class SubjectEditHandler implements Subscriber
 
 
     /**
-     * @param \Tk\Event\ControllerEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ControllerEvent $event
      */
-    public function onKernelController(\Tk\Event\ControllerEvent $event)
+    public function onKernelController(\Symfony\Component\HttpKernel\Event\ControllerEvent $event)
     {
         /** @var \App\Controller\Subject\Edit $controller */
-        $controller = $event->getControllerObject();
+        $controller = \Tk\Event\Event::findControllerObject($event);
         if ($controller instanceof \App\Controller\Subject\Edit) {
             $this->controller = $controller;
         }
@@ -76,7 +77,7 @@ class SubjectEditHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            \Tk\Kernel\KernelEvents::CONTROLLER => array('onKernelController', 0),
+            KernelEvents::CONTROLLER => array('onKernelController', 0),
             \Tk\PageEvents::CONTROLLER_INIT => array('onControllerInit', 0)
         );
     }
