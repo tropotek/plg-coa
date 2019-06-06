@@ -81,10 +81,10 @@ class Send extends \Tk\Table\Action\Button
         // Get list with no limit...
         $list = $this->getTable()->getList();
         $fullList = $list;
-        if (isset($request[$this->checkboxName]) && is_array($request[$this->checkboxName])) {
+        if ($request->has($this->checkboxName) && is_array($request->get($this->checkboxName))) {
             $fullList = array();
             foreach($list as $obj) {
-                if (in_array($obj->id, $request[$this->checkboxName]))
+                if (in_array($obj->id, $request->get($this->checkboxName)))
                     $fullList[] = $obj;
             }
         } else if ($list && is_object($list) && $list->countAll() > $list->count()) {
@@ -152,7 +152,7 @@ class Send extends \Tk\Table\Action\Button
                 $message->setFrom($profile->email);
                 $message->addTo($adapter->get('email'));
 
-                $pdf = \Coa\Ui\PdfCertificate::create($adapter);
+                $pdf = \Coa\Ui\Pdf\Certificate::create($adapter);
                 $filename = 'unimelbCert.pdf';
                 $message->addStringAttachment($pdf->getPdfAttachment($filename), $filename);
 

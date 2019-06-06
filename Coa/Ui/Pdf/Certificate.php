@@ -1,5 +1,5 @@
 <?php
-namespace Coa\Ui;
+namespace Coa\Ui\Pdf;
 
 use Dom\Renderer\Renderer;
 use Dom\Template;
@@ -12,7 +12,7 @@ use Dom\Template;
  * @note This file uses the mpdf lib
  * @link https://mpdf.github.io/
  */
-class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterface
+class Certificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterface
 {
 
     /**
@@ -53,7 +53,7 @@ class PdfCertificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
     /**
      * @param \Coa\Adapter\Iface $adapter
      * @param string $watermark
-     * @return PdfCertificate
+     * @return Certificate
      * @throws \Exception
      */
     public static function create($adapter, $watermark = '')

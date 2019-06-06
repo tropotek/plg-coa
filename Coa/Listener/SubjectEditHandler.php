@@ -46,7 +46,7 @@ class SubjectEditHandler implements Subscriber
             if (!$this->controller->getUser()->isStaff() || !$this->controller->getSubject()->getId()) return;
             /** @var \Tk\Ui\Admin\ActionPanel $actionPanel */
             $actionPanel = $this->controller->getActionPanel();
-            $actionPanel->add(\Tk\Ui\Button::create('Certificates',
+            $actionPanel->append(\Tk\Ui\Link::createBtn('Certificates',
                 \Uni\Uri::createSubjectUrl('/coaManager.html'), 'fa fa-certificate'));
         }
     }

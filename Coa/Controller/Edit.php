@@ -53,19 +53,23 @@ class Edit extends \Uni\Controller\AdminEditIface
         $adapter = null;
         switch ($this->coa->type) {
             case 'supervisor':
-                $supervisor = \App\Db\SupervisorMap::create()->findCpdTotals(array('subjectId' => $this->getConfig()->getSubjectId(), 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
+                $supervisor = \App\Db\SupervisorMap::create()->findCpdTotals(
+                    array('subjectId' => $this->getConfig()->getSubjectId(), 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\Supervisor($this->coa, $supervisor);
                 break;
             case 'company':
-                $company = \App\Db\CompanyMap::create()->findFiltered(array('profileId' => $this->coa->profileId, 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
+                $company = \App\Db\CompanyMap::create()->findFiltered(
+                    array('profileId' => $this->coa->profileId, 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\Company($this->coa, $company);
                 break;
             case 'staff':
-                $staff = \App\Db\UserMap::create()->findFiltered(array('profileId' => $this->coa->profileId, 'type' => \Uni\Db\Role::TYPE_STAFF), \Tk\Db\Tool::create('RAND()'))->current();
+                $staff = \App\Db\UserMap::create()->findFiltered(
+                    array('profileId' => $this->coa->profileId, 'type' => \Uni\Db\Role::TYPE_STAFF), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\User($this->coa, $staff);
                 break;
             case 'student':
-                $student = \App\Db\UserMap::create()->findFiltered(array('subjectId' => $this->getConfig()->getSubjectId(), 'type' => \Uni\Db\Role::TYPE_STUDENT), \Tk\Db\Tool::create('RAND()'))->current();
+                $student = \App\Db\UserMap::create()->findFiltered(
+                    array('subjectId' => $this->getConfig()->getSubjectId(), 'type' => \Uni\Db\Role::TYPE_STUDENT), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\User($this->coa, $student);
                 break;
         }
@@ -79,9 +83,20 @@ class Edit extends \Uni\Controller\AdminEditIface
         );
         $adapter->replace($value);
 
-        $ren = \Coa\Ui\PdfCertificate::create($adapter, 'Sample');
+        $ren = \Coa\Ui\Pdf\Certificate::create($adapter, 'Sample');
         $ren->output();     // comment this to see html version
         return $ren->show();
+    }
+
+    public function initActionPanel()
+    {
+        if ($this->coa->getId()) {
+            $this->getActionPanel()->append(\Tk\Ui\Link::createBtn('Preview',
+                \Uni\Uri::create()->set('preview')->noCrumb(), 'fa fa-eye'))->setAttr('target', '_blank');
+            $this->getActionPanel()->append(\Tk\Ui\Link::createBtn('Send To',
+                \Uni\Uri::createSubjectUrl($this->getRecipientSelectUrl($this->coa->type))
+                    ->set('coaId', $this->coa->getId()), 'fa fa-envelope-o'));
+        }
     }
 
     /**
@@ -90,12 +105,7 @@ class Edit extends \Uni\Controller\AdminEditIface
      */
     public function show()
     {
-        if ($this->coa->getId()) {
-            $this->getActionPanel()->add(\Tk\Ui\Button::create('Preview', \Uni\Uri::create()->set('preview')->noCrumb(), 'fa fa-eye'))->setAttr('target', '_blank');
-            $this->getActionPanel()->add(\Tk\Ui\Button::create('Send To',
-                \Uni\Uri::createSubjectUrl($this->getRecipientSelectUrl($this->coa->type))
-                    ->set('coaId', $this->coa->getId()), 'fa fa-envelope-o'));
-        }
+        $this->initActionPanel();
         $template = parent::show();
         
         // Render the form
