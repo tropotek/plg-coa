@@ -37,39 +37,38 @@ class Company extends \Uni\Controller\AdminManagerIface
             $this->getConfig()->getBackUrl()->redirect();
         }
 
-        $this->table = \App\Table\Company::createDynamicTable($this->getConfig()->getUrlName(), 'App\Db\Company', $this->getConfig()->getProfileId());
-        $this->table->init();
-        $this->table->removeCell('status');
-        $this->table->removeCell('categoryClass');
-        $this->table->removeCell('phone');
-        $this->table->removeCell('private');
-        $this->table->removeCell('modified');
-        $this->table->removeCell('created');
-        $this->table->appendCell(new \Tk\Table\Cell\Text('placements'))->setOrderProperty('COUNT(p.id)');
-        $this->table->appendCell(new \Tk\Table\Cell\Text('units'))->setOrderProperty('SUM(p.units)');
-        $this->table->removeFilter('status');
-        $this->table->removeFilter('categoryClass');
-        $this->table->removeFilter('categoryId');
-
-        $this->table->getFilterForm()->initForm();
-        $this->table->removeFilter('accom');
+        $this->setTable(\App\Table\Company::createDynamicTable($this->getConfig()->getUrlName(), 'App\Db\Company'));
+        $this->getTable()->init();
+        $this->getTable()->removeCell('status');
+        $this->getTable()->removeCell('categoryClass');
+        $this->getTable()->removeCell('phone');
+        $this->getTable()->removeCell('private');
+        $this->getTable()->removeCell('modified');
+        $this->getTable()->removeCell('created');
+        $this->getTable()->appendCell(new \Tk\Table\Cell\Text('placements'))->setOrderProperty('COUNT(p.id)');
+        $this->getTable()->appendCell(new \Tk\Table\Cell\Text('units'))->setOrderProperty('SUM(p.units)');
+        $this->getTable()->removeFilter('status');
+        $this->getTable()->removeFilter('categoryClass');
+        $this->getTable()->removeFilter('categoryId');
+        $this->getTable()->getFilterForm()->initForm();
+        $this->getTable()->removeFilter('accom');
 
         $list = \App\Db\PlacementTypeMap::create()->findFiltered(array('profileId' => $this->getConfig()->getProfileId()));
-        $this->table->appendFilter(new \Tk\Form\Field\CheckboxSelect('placementTypeId', $list));
+        $this->getTable()->appendFilter(new \Tk\Form\Field\CheckboxSelect('placementTypeId', $list));
 
-        $this->table->appendFilter(new  \Tk\Form\Field\Input('minPlacements'))->setAttr('placeholder', 'Min. Placements');
-        $this->table->appendFilter(new  \Tk\Form\Field\Input('minUnits'))->setAttr('placeholder', 'Min. Units');
+        $this->getTable()->appendFilter(new  \Tk\Form\Field\Input('minPlacements'))->setAttr('placeholder', 'Min. Placements');
+        $this->getTable()->appendFilter(new  \Tk\Form\Field\Input('minUnits'))->setAttr('placeholder', 'Min. Units');
 
-        $this->table->appendFilter(new \Tk\Form\Field\DateRange('date'));
+        $this->getTable()->appendFilter(new \Tk\Form\Field\DateRange('date'));
         $subject = $this->getConfig()->getSubject();
         $value = array(
             'dateStart' => $subject->dateStart->format(\Tk\Date::FORMAT_SHORT_DATE),
             'dateEnd' => $subject->dateEnd->format(\Tk\Date::FORMAT_SHORT_DATE)
         );
-        $this->table->getFilterForm()->load($value);
+        $this->getTable()->getFilterForm()->load($value);
 
         if ($this->coa)
-            $this->table->prependAction(\Coa\Table\Action\Send::create($this->coa));
+            $this->getTable()->prependAction(\Coa\Table\Action\Send::create($this->coa));
 
         $filter = array(
             'status' => \App\Db\Company::STATUS_APPROVED,
@@ -77,8 +76,8 @@ class Company extends \Uni\Controller\AdminManagerIface
             'hasEmail' => true
         );
 
-        $this->table->setList($this->findList($filter));
-        $this->table->removeCell('accom');
+        $this->getTable()->setList($this->findList($filter));
+        $this->getTable()->removeCell('accom');
 
     }
 
@@ -90,8 +89,8 @@ class Company extends \Uni\Controller\AdminManagerIface
      */
     public function findList($filter = array(), $tool = null)
     {
-        if (!$tool) $tool = $this->table->getTool('FIELD(a.status, \'pending\', \'approved\') DESC');
-        $filter = array_merge($this->table->getFilterValues(), $filter);
+        if (!$tool) $tool = $this->getTable()->getTool('FIELD(a.status, \'pending\', \'approved\') DESC');
+        $filter = array_merge($this->getTable()->getFilterValues(), $filter);
         $list = \App\Db\CompanyMap::create()->findWithPlacements($filter, $tool);
         return $list;
     }
@@ -101,9 +100,6 @@ class Company extends \Uni\Controller\AdminManagerIface
      */
     public function show()
     {
-
-        //$this->getActionPanel()->add(\Tk\Ui\Button::create('Send', \Tk\Uri::create()->set('send'), 'fa fa-send'))->setAttr('title', 'Send to selected');
-
         $template = parent::show();
 
         $template->prependTemplate('table', $this->table->show());

@@ -2,8 +2,6 @@
 namespace Coa\Controller;
 
 
-
-
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
@@ -38,26 +36,26 @@ class Staff extends \Uni\Controller\AdminManagerIface
             $this->getConfig()->getBackUrl()->redirect();
         }
 
-        $this->table = \Uni\Table\User::create();
-        $this->table->init();
+        $this->setTable(\Uni\Table\User::create());
+        $this->getTable()->init();
 
-        $this->table->removeAction('delete');
-        $this->table->removeCell('actions');
-        $this->table->removeCell('username');
-        $this->table->removeCell('phone');
-        $this->table->removeCell('role');
-        $this->table->removeCell('active');
-        $this->table->removeCell('created');
+        $this->getTable()->removeAction('delete');
+        $this->getTable()->removeCell('actions');
+        $this->getTable()->removeCell('username');
+        $this->getTable()->removeCell('phone');
+        $this->getTable()->removeCell('role');
+        $this->getTable()->removeCell('active');
+        $this->getTable()->removeCell('created');
 
         if ($this->coa)
-            $this->table->prependAction(\Coa\Table\Action\Send::create($this->coa));
+            $this->getTable()->prependAction(\Coa\Table\Action\Send::create($this->coa));
 
         $filter = array(
             'profileId' => $this->getConfig()->getProfileId(),
             'type' => \Uni\Db\Role::TYPE_STAFF,
             'active' => true
         );
-        $this->table->setList($this->table->findList($filter));
+        $this->getTable()->setList($this->getTable()->findList($filter));
 
     }
 
@@ -66,10 +64,9 @@ class Staff extends \Uni\Controller\AdminManagerIface
      */
     public function show()
     {
-
         $template = parent::show();
 
-        $template->prependTemplate('table', $this->table->show());
+        $template->prependTemplate('panel', $this->getTable()->show());
         
         return $template;
     }
@@ -82,9 +79,7 @@ class Staff extends \Uni\Controller\AdminManagerIface
     public function __makeTemplate()
     {
         $xhtml = <<<HTML
-<div>
-  <div class="tk-panel" data-panel-icon="fa fa-certificate" var="table"></div>
-</div>
+<div class="tk-panel" data-panel-icon="fa fa-certificate" var="panel"></div>
 HTML;
 
         return \Dom\Loader::load($xhtml);

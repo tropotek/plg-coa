@@ -10,8 +10,6 @@ namespace Coa\Controller;
 class Manager extends \Uni\Controller\AdminManagerIface
 {
 
-
-
     /**
      * @throws \Exception
      */
@@ -27,10 +25,18 @@ class Manager extends \Uni\Controller\AdminManagerIface
     public function doDefault(\Tk\Request $request)
     {
 
-        $this->table = \Coa\Table\Coa::create()->init();
+        $this->setTable(\Coa\Table\Coa::create()->init());
 
-        $this->table->setList($this->table->findList(array('profileId' => $this->getConfig()->getProfileId())));
+        $this->getTable()->setList($this->getTable()->findList(array('profileId' => $this->getConfig()->getProfileId())));
 
+    }
+
+    /**
+     *
+     */
+    public function initActionPanel()
+    {
+        $this->getActionPanel()->append(\Tk\Ui\Link::createBtn('Add Coa', \Uni\Uri::createSubjectUrl('/coaEdit.html'), 'fa fa-certificate'));
     }
 
     /**
@@ -38,10 +44,10 @@ class Manager extends \Uni\Controller\AdminManagerIface
      */
     public function show()
     {
-        $this->getActionPanel()->add(\Tk\Ui\Button::create('Add Coa', \Uni\Uri::createSubjectUrl('/coaEdit.html'), 'fa fa-certificate'));
+        $this->initActionPanel();
         $template = parent::show();
 
-        $template->appendTemplate('table', $this->table->show());
+        $template->appendTemplate('panel', $this->getTable()->show());
         
         return $template;
     }
@@ -54,9 +60,7 @@ class Manager extends \Uni\Controller\AdminManagerIface
     public function __makeTemplate()
     {
         $xhtml = <<<HTML
-<div>
-  <div class="tk-panel" data-panel-icon="fa fa-certificate" var="table"></div>
-</div>
+<div class="tk-panel" data-panel-icon="fa fa-certificate" var="panel"></div>
 HTML;
 
         return \Dom\Loader::load($xhtml);

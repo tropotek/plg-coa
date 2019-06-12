@@ -37,39 +37,38 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
             $this->getConfig()->getBackUrl()->redirect();
         }
 
-        $this->table = \App\Table\Supervisor::createDynamicTable($this->getConfig()->getUrlName(), 'App\Db\Supervisor', $this->getConfig()->getProfileId());
-        $this->table->init();
-        //$this->table->resetSession();
+        $this->setTable(\App\Table\Supervisor::createDynamicTable($this->getConfig()->getUrlName(), 'App\Db\Supervisor', $this->getConfig()->getProfileId()));
+        $this->getTable()->init();
 
-        $this->table->removeAction('delete');
-        $this->table->removeCell('accom');
-        $this->table->removeCell('status');
-        $this->table->removeCell('modified');
-        $this->table->removeCell('created');
-        $this->table->appendCell(new \Tk\Table\Cell\Text('placements'))->setOrderProperty('COUNT(p.id)');
-        $this->table->appendCell(new \Tk\Table\Cell\Text('units'))->setOrderProperty('SUM(p.units)');
-        $this->table->appendCell(new \Tk\Table\Cell\Text('cpd'))->setOrderProperty('SUM(p.units)');
-        $this->table->removeFilter('status');
-        $this->table->removeFilter('graduationYear');
+        $this->getTable()->removeAction('delete');
+        $this->getTable()->removeCell('accom');
+        $this->getTable()->removeCell('status');
+        $this->getTable()->removeCell('modified');
+        $this->getTable()->removeCell('created');
+        $this->getTable()->appendCell(new \Tk\Table\Cell\Text('placements'))->setOrderProperty('COUNT(p.id)');
+        $this->getTable()->appendCell(new \Tk\Table\Cell\Text('units'))->setOrderProperty('SUM(p.units)');
+        $this->getTable()->appendCell(new \Tk\Table\Cell\Text('cpd'))->setOrderProperty('SUM(p.units)');
+        $this->getTable()->removeFilter('status');
+        $this->getTable()->removeFilter('graduationYear');
 
 
-        $this->table->appendFilter(new \Tk\Form\Field\DateRange('date'));
+        $this->getTable()->appendFilter(new \Tk\Form\Field\DateRange('date'));
         $subject = $this->getConfig()->getSubject();
         $value = array(
             'dateStart' => $subject->dateStart->format(\Tk\Date::FORMAT_SHORT_DATE),
             'dateEnd' => $subject->dateEnd->format(\Tk\Date::FORMAT_SHORT_DATE)
         );
-        $this->table->getFilterForm()->load($value);
+        $this->getTable()->getFilterForm()->load($value);
 
         $list = \App\Db\PlacementTypeMap::create()->findFiltered(array('profileId' => $this->getConfig()->getProfileId()));
-        $this->table->appendFilter(new \Tk\Form\Field\CheckboxSelect('placementTypeId', $list));
+        $this->getTable()->appendFilter(new \Tk\Form\Field\CheckboxSelect('placementTypeId', $list));
 
-        $this->table->appendFilter(new  \Tk\Form\Field\Input('minPlacements'))->setAttr('placeholder', 'Min. Placements');
-        $this->table->appendFilter(new  \Tk\Form\Field\Input('minUnits'))->setAttr('placeholder', 'Min. Units');
+        $this->getTable()->appendFilter(new  \Tk\Form\Field\Input('minPlacements'))->setAttr('placeholder', 'Min. Placements');
+        $this->getTable()->appendFilter(new  \Tk\Form\Field\Input('minUnits'))->setAttr('placeholder', 'Min. Units');
         //$this->table->appendFilter(new  \Tk\Form\Field\Input('minCpd'))->setAttr('placeholder', 'Min. Cpd');
 
         if ($this->coa)
-            $this->table->prependAction(\Coa\Table\Action\Send::create($this->coa));
+            $this->getTable()->prependAction(\Coa\Table\Action\Send::create($this->coa));
 
         $filter = array(
             'status' => \App\Db\Supervisor::STATUS_APPROVED,
@@ -77,10 +76,10 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
             'hasEmail' => true
         );
 
-        $tool = $this->table->getTool('created DESC');
-        $filter = array_merge($this->table->getFilterValues(), $filter);
+        $tool = $this->getTable()->getTool('created DESC');
+        $filter = array_merge($this->getTable()->getFilterValues(), $filter);
         $list = \App\Db\SupervisorMap::create()->findCpdTotals($filter, $tool);
-        $this->table->setList($list);
+        $this->getTable()->setList($list);
 
     }
 
@@ -89,11 +88,9 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
      */
     public function show()
     {
-        //$this->getActionPanel()->add(\Tk\Ui\Button::create('Send', \Tk\Uri::create()->set('send'), 'fa fa-send'))->setAttr('title', 'Send to selected');
-
         $template = parent::show();
 
-        $template->prependTemplate('table', $this->table->show());
+        $template->prependTemplate('panel', $this->getTable()->show());
         
         return $template;
     }
@@ -106,11 +103,9 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
     public function __makeTemplate()
     {
         $xhtml = <<<HTML
-<div>
-  <div class="tk-panel" data-panel-icon="fa fa-certificate" var="table">
-    <p>&nbsp;</p>
-    <p><small>*Note: Table only shows supervisors with a valid email</small></p>
-  </div>
+<div class="tk-panel" data-panel-icon="fa fa-certificate" var="panel">
+  <p>&nbsp;</p>
+  <p><small>*Note: Table only shows supervisors with a valid email</small></p>
 </div>
 HTML;
 

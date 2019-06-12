@@ -146,9 +146,7 @@ class Edit extends \Uni\Controller\AdminEditIface
     public function __makeTemplate()
     {
         $xhtml = <<<HTML
-<div>
-  <div class="tk-panel" data-panel-icon="fa fa-certificate" var="form"></div>
-</div>
+<div class="tk-panel" data-panel-icon="fa fa-certificate" var="form"></div>
 HTML;
         return \Dom\Loader::load($xhtml);
     }
