@@ -57,68 +57,55 @@ class CoaMap extends Mapper
         }
         return $this->formMap;
     }
-
     /**
-     * @param array $filter
+     * @param array|\Tk\Db\Filter $filter
      * @param Tool $tool
      * @return ArrayObject|Coa[]
      * @throws \Exception
      */
-    public function findFiltered($filter = array(), $tool = null)
+    public function findFiltered($filter, $tool = null)
     {
-        $this->makeQuery($filter, $tool, $where, $from);
-        $res = $this->selectFrom($from, $where, $tool);
-        return $res;
+        return $this->selectFromFilter($this->makeQuery(\Tk\Db\Filter::create($filter)), $tool);
     }
 
     /**
-     * @param array $filter
-     * @param Tool $tool
-     * @param string $where
-     * @param string $from
-     * @return ArrayObject|Coa[]
+     * @param \Tk\Db\Filter $filter
+     * @return \Tk\Db\Filter
      */
-    public function makeQuery($filter = array(), $tool = null, &$where = '', &$from = '')
+    public function makeQuery(\Tk\Db\Filter $filter)
     {
-        $from .= sprintf('%s a ', $this->quoteParameter($this->getTable()));
+        $filter->appendFrom('%s a ', $this->quoteParameter($this->getTable()));
 
         if (!empty($filter['keywords'])) {
-            $kw = '%' . $this->escapeString($filter['keywords']) . '%';
+            $kw = '%' . $this->getDb()->escapeString($filter['keywords']) . '%';
             $w = '';
-            //$w .= sprintf('a.name LIKE %s OR ', $this->quote($kw));
+            //$w .= sprintf('a.name LIKE %s OR ', $this->getDb()->quote($kw));
             if (is_numeric($filter['keywords'])) {
                 $id = (int)$filter['keywords'];
                 $w .= sprintf('a.id = %d OR ', $id);
             }
-            if ($w) $where .= '(' . substr($w, 0, -3) . ') AND ';
-
+            if ($w) $filter->appendWhere('(%s) AND ', substr($w, 0, -3));
         }
 
         if (!empty($filter['id'])) {
-            $where .= sprintf('a.id = %s AND ', (int)$filter['id']);
+            $filter->appendWhere('a.id = %s AND ', (int)$filter['id']);
         }
         if (!empty($filter['profileId'])) {
-            $where .= sprintf('a.profile_id = %s AND ', (int)$filter['profileId']);
+            $filter->appendWhere('a.profile_id = %s AND ', (int)$filter['profileId']);
         }
         if (!empty($filter['type'])) {
-            $where .= sprintf('a.type = %s AND ', $this->quote($filter['type']));
+            $filter->appendWhere('a.type = %s AND ', $this->quote($filter['type']));
         }
         if (!empty($filter['subject'])) {
-            $where .= sprintf('a.subject = %s AND ', $this->quote($filter['subject']));
+            $filter->appendWhere('a.subject = %s AND ', $this->quote($filter['subject']));
         }
 
         if (!empty($filter['exclude'])) {
             $w = $this->makeMultiQuery($filter['exclude'], 'a.id', 'AND', '!=');
-            if ($w) $where .= '('. $w . ') AND ';
-
+            if ($w) $filter->appendWhere('(%s) AND ', $w);
         }
 
-        if ($where) {
-            $where = substr($where, 0, -4);
-        }
-
-        return $where;
+        return $filter;
     }
-
 
 }
