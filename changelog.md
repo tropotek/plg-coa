@@ -1,5 +1,11 @@
 #CHANGELOG#
 
+Ver 3.0.10 [2019-06-17]:
+-------------------------------
+  - Upgraded all DB model mapper filter queries to use new Filter object
+  - Added new PDF export to Skills Entries
+
+
 Ver 3.0.8 [2019-05-15]:
 -------------------------------
 
