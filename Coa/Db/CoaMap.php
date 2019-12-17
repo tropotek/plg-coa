@@ -24,10 +24,10 @@ class CoaMap extends Mapper
         if (!$this->dbMap) { 
             $this->dbMap = new \Tk\DataMap\DataMap();
             $this->dbMap->addPropertyMap(new Db\Integer('id'), 'key');
-            $this->dbMap->addPropertyMap(new Db\Integer('profileId', 'profile_id'));
+            $this->dbMap->addPropertyMap(new Db\Integer('courseId', 'course_id'));
             $this->dbMap->addPropertyMap(new Db\Text('type'));
             $this->dbMap->addPropertyMap(new Db\Text('background'));
-            $this->dbMap->addPropertyMap(new Db\Text('subject'));
+            $this->dbMap->addPropertyMap(new Db\Text('msgSubject', 'subject'));
             $this->dbMap->addPropertyMap(new Db\Text('html'));
             $this->dbMap->addPropertyMap(new Db\Text('emailHtml', 'email_html'));
             $this->dbMap->addPropertyMap(new Db\Date('modified'));
@@ -45,10 +45,10 @@ class CoaMap extends Mapper
         if (!$this->formMap) {
             $this->formMap = new \Tk\DataMap\DataMap();
             $this->formMap->addPropertyMap(new Form\Integer('id'), 'key');
-            $this->formMap->addPropertyMap(new Form\Integer('profileId'));
+            $this->formMap->addPropertyMap(new Form\Integer('courseId'));
             $this->formMap->addPropertyMap(new Form\Text('type'));
             $this->formMap->addPropertyMap(new Form\Text('background'));
-            $this->formMap->addPropertyMap(new Form\Text('subject'));
+            $this->formMap->addPropertyMap(new Form\Text('msgSubject'));
             $this->formMap->addPropertyMap(new Form\Text('html'));
             $this->formMap->addPropertyMap(new Form\Text('emailHtml'));
             $this->formMap->addPropertyMap(new Form\Date('modified'));
@@ -87,17 +87,19 @@ class CoaMap extends Mapper
             if ($w) $filter->appendWhere('(%s) AND ', substr($w, 0, -3));
         }
 
+
         if (!empty($filter['id'])) {
-            $filter->appendWhere('a.id = %s AND ', (int)$filter['id']);
+            $w = $this->makeMultiQuery($filter['id'], 'a.id');
+            if ($w) $filter->appendWhere('(%s) AND ', $w);
         }
-        if (!empty($filter['profileId'])) {
-            $filter->appendWhere('a.profile_id = %s AND ', (int)$filter['profileId']);
+        if (!empty($filter['courseId'])) {
+            $filter->appendWhere('a.course_id = %s AND ', (int)$filter['courseId']);
         }
         if (!empty($filter['type'])) {
             $filter->appendWhere('a.type = %s AND ', $this->quote($filter['type']));
         }
-        if (!empty($filter['subject'])) {
-            $filter->appendWhere('a.subject = %s AND ', $this->quote($filter['subject']));
+        if (!empty($filter['msgSubject'])) {
+            $filter->appendWhere('a.subject = %s AND ', $this->quote($filter['msgSubject']));
         }
 
         if (!empty($filter['exclude'])) {

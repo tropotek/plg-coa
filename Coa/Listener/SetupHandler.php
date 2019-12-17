@@ -40,9 +40,9 @@ class SetupHandler implements Subscriber
 //            $dispatcher->addSubscriber(new \Ems\Listener\ExampleHandler(Plugin::ZONE_SUBJECT, $subject->getId()));
 //        }
 
-        $profile = \App\Config::getInstance()->getProfile();
-        if ($profile && $plugin->isZonePluginEnabled(\Coa\Plugin::ZONE_SUBJECT_PROFILE, $profile->getId())) {
-            //\Tk\Log::debug($plugin->getName() . ': Animals init subject profile plugin stuff: ' . $profile->name);
+        $course = \App\Config::getInstance()->getCourse();
+        if ($course && $plugin->isZonePluginEnabled(\Coa\Plugin::ZONE_COURSE, $course->getId())) {
+            //\Tk\Log::debug($plugin->getName() . ': Animals init subject course plugin stuff: ' . $course->name);
             //$dispatcher->addSubscriber(new \Coa\Listener\ProfileEditHandler());
 
             if (\Uni\Config::getInstance()->getSubject()) {

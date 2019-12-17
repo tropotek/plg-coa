@@ -1,6 +1,9 @@
 <?php
 namespace Coa\Db;
 
+use Bs\Db\Traits\TimestampTrait;
+use Uni\Db\Traits\CourseTrait;
+
 /**
  * @author Mick Mifsud
  * @created 2018-11-26
@@ -10,11 +13,13 @@ namespace Coa\Db;
 class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
 {
 
+    use CourseTrait;
+    use TimestampTrait;
+
     const TYPE_SUPERVISOR   = 'supervisor';
     const TYPE_COMPANY      = 'company';
     const TYPE_STAFF        = 'staff';
     const TYPE_STUDENT      = 'student';
-
 
     /**
      * @var int
@@ -24,7 +29,7 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     /**
      * @var int
      */
-    public $profileId = 0;
+    public $courseId = 0;
 
     /**
      * @var string
@@ -34,7 +39,7 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     /**
      * @var string
      */
-    public $subject = '';
+    public $msgSubject = '';
 
     /**
      * @var string
@@ -61,32 +66,14 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
      */
     public $created = null;
 
-    /**
-     * @var \App\Db\Profile
-     */
-    private $profile = null;
-
 
     /**
      * Coa
      */
     public function __construct()
     {
-        $this->modified = new \DateTime();
-        $this->created = new \DateTime();
+        $this->_TimestampTrait();
 
-    }
-
-    /**
-     * @return \App\Db\Profile|null|\Tk\Db\Map\Model|\Tk\Db\ModelInterface
-     * @throws \Exception
-     */
-    public function getProfile()
-    {
-        if (!$this->profile) {
-            $this->profile = \App\Db\ProfileMap::create()->find($this->profileId);
-        }
-        return $this->profile;
     }
 
     /**
@@ -97,21 +84,19 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     public function getDataPath()
     {
         try {
-            return sprintf('%s/coa/%s', $this->getProfile()->getDataPath(), $this->getVolatileId());
+            return sprintf('%s/coa/%s', $this->getCourse()->getDataPath(), $this->getVolatileId());
         } catch (\Exception $e) { }
         return $this->getDataPath().'/coa/'.$this->getVolatileId();
     }
 
     /**
-     *
-     *
      * @return null|\Uni\Uri
      */
     public function getBackgroundUrl()
     {
         $url = null;
-        if (is_file($this->getConfig()->getDataPath() . $this->background)) {
-            $url = \Uni\Uri::create($this->getConfig()->getDataUrl() . $this->background);
+        if (is_file($this->getConfig()->getDataPath() . $this->getBackground())) {
+            $url = \Uni\Uri::create($this->getConfig()->getDataUrl() . $this->getBackground());
         }
         return $url;
     }
@@ -131,13 +116,102 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
                 $adapter = new \Coa\Adapter\Company($this, $model);
                 break;
             case self::TYPE_STAFF:
-                $adapter = new \Coa\Adapter\User($this, $model);
-                break;
             case self::TYPE_STUDENT:
+                $adapter = new \Coa\Adapter\User($this, $model);
                 $adapter = new \Coa\Adapter\User($this, $model);
                 break;
         }
         return $adapter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return Coa
+     */
+    public function setType(string $type): Coa
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMsgSubject(): string
+    {
+        return $this->msgSubject;
+    }
+
+    /**
+     * @param string $msgSubject
+     * @return Coa
+     */
+    public function setMsgSubject(string $msgSubject): Coa
+    {
+        $this->msgSubject = $msgSubject;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBackground(): string
+    {
+        return $this->background;
+    }
+
+    /**
+     * @param string $background
+     * @return Coa
+     */
+    public function setBackground(string $background): Coa
+    {
+        $this->background = $background;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHtml(): string
+    {
+        return $this->html;
+    }
+
+    /**
+     * @param string $html
+     * @return Coa
+     */
+    public function setHtml(string $html): Coa
+    {
+        $this->html = $html;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailHtml(): string
+    {
+        return $this->emailHtml;
+    }
+
+    /**
+     * @param string $emailHtml
+     * @return Coa
+     */
+    public function setEmailHtml(string $emailHtml): Coa
+    {
+        $this->emailHtml = $emailHtml;
+        return $this;
     }
 
     
@@ -147,18 +221,14 @@ class Coa extends \Tk\Db\Map\Model implements \Tk\ValidInterface
     public function validate()
     {
         $errors = array();
-
-
-        if (!$this->profileId) {
-            $errors['profileId'] = 'Invalid value: profileId';
-        }
+        $errors = $this->validateCourseId($errors);
 
         // TODO: Check type exists in contants
         if (!$this->type) {
             $errors['type'] = 'Invalid value: type';
         }
 
-        if (!$this->subject) {
+        if (!$this->msgSubject) {
             $errors['subject'] = 'Invalid value: subject';
         }
 

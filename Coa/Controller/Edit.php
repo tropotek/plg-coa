@@ -29,7 +29,7 @@ class Edit extends \Uni\Controller\AdminEditIface
     public function doDefault(\Tk\Request $request)
     {
         $this->coa = new \Coa\Db\Coa();
-        $this->coa->profileId = $this->getConfig()->getProfileId();
+        $this->coa->setCourseId($this->getConfig()->getCourseId());
         if ($request->get('coaId')) {
             $this->coa = \Coa\Db\CoaMap::create()->find($request->get('coaId'));
         }
@@ -51,7 +51,7 @@ class Edit extends \Uni\Controller\AdminEditIface
     {
         /** @var \Coa\Adapter\Iface $adapter */
         $adapter = null;
-        switch ($this->coa->type) {
+        switch ($this->coa->getType()) {
             case 'supervisor':
                 $supervisor = \App\Db\SupervisorMap::create()->findCpdTotals(
                     array('subjectId' => $this->getConfig()->getSubjectId(), 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
@@ -59,12 +59,12 @@ class Edit extends \Uni\Controller\AdminEditIface
                 break;
             case 'company':
                 $company = \App\Db\CompanyMap::create()->findFiltered(
-                    array('profileId' => $this->coa->profileId, 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
+                    array('courseId' => $this->coa->courseId, 'status' => \App\Db\Company::STATUS_APPROVED), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\Company($this->coa, $company);
                 break;
             case 'staff':
                 $staff = \App\Db\UserMap::create()->findFiltered(
-                    array('profileId' => $this->coa->profileId, 'type' => \Uni\Db\Role::TYPE_STAFF), \Tk\Db\Tool::create('RAND()'))->current();
+                    array('courseId' => $this->coa->courseId, 'type' => \Uni\Db\Role::TYPE_STAFF), \Tk\Db\Tool::create('RAND()'))->current();
                 $adapter = new \Coa\Adapter\User($this->coa, $staff);
                 break;
             case 'student':
@@ -75,11 +75,11 @@ class Edit extends \Uni\Controller\AdminEditIface
         }
         if (!$adapter) {
             //return '<h2>Cannot find an Adapter object for this COA Type: ' . $this->coa->type . '</h2>';
-            throw new \Tk\Exception('Cannot find an Adapter object for this COA Type: ' . $this->coa->type );
+            throw new \Tk\Exception('Cannot find an Adapter object for this COA Type: ' . $this->coa->getType() );
         }
         $value = array(
-            'dateStart' => $this->getConfig()->getSubject()->dateStart->format(\Tk\Date::FORMAT_SHORT_DATE),
-            'dateEnd' => $this->getConfig()->getSubject()->dateEnd->format(\Tk\Date::FORMAT_SHORT_DATE)
+            'dateStart' => $this->getConfig()->getSubject()->getDateStart(\Tk\Date::FORMAT_SHORT_DATE),
+            'dateEnd' => $this->getConfig()->getSubject()->getDateEnd(\Tk\Date::FORMAT_SHORT_DATE)
         );
         $adapter->replace($value);
 
@@ -94,7 +94,7 @@ class Edit extends \Uni\Controller\AdminEditIface
             $this->getActionPanel()->append(\Tk\Ui\Link::createBtn('Preview',
                 \Uni\Uri::create()->set('preview')->noCrumb(), 'fa fa-eye'))->setAttr('target', '_blank');
             $this->getActionPanel()->append(\Tk\Ui\Link::createBtn('Send To',
-                \Uni\Uri::createSubjectUrl($this->getRecipientSelectUrl($this->coa->type))
+                \Uni\Uri::createSubjectUrl($this->getRecipientSelectUrl($this->coa->getType()))
                     ->set('coaId', $this->coa->getId()), 'fa fa-envelope-o'));
         }
     }

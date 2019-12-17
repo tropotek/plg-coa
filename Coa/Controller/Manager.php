@@ -27,7 +27,7 @@ class Manager extends \Uni\Controller\AdminManagerIface
 
         $this->setTable(\Coa\Table\Coa::create()->init());
 
-        $this->getTable()->setList($this->getTable()->findList(array('profileId' => $this->getConfig()->getProfileId())));
+        $this->getTable()->setList($this->getTable()->findList(array('courseId' => $this->getConfig()->getCourseId())));
 
     }
 

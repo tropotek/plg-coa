@@ -51,7 +51,7 @@ class Staff extends \Uni\Controller\AdminManagerIface
             $this->getTable()->prependAction(\Coa\Table\Action\Send::create($this->coa));
 
         $filter = array(
-            'profileId' => $this->getConfig()->getProfileId(),
+            'courseId' => $this->getConfig()->getCourseId(),
             'type' => \Uni\Db\Role::TYPE_STAFF,
             'active' => true
         );

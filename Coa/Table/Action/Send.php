@@ -131,25 +131,32 @@ class Send extends \Tk\Table\Action\Button
                 }
 
 
-                $profile = $this->getCoa()->getProfile();
+                $course = $this->getCoa()->getCourse();
 
                 // Create message, attachment and email to company
                 $message = $this->getConfig()->createMessage();
-                $message->setContent($this->getCoa()->emailHtml);
+                $message->setContent($this->getCoa()->getEmailHtml());
 
                 $message->replace($adapter->all());
-                $message->set('sig', $profile->emailSignature);
-                $message->set('subject::email', $profile->email);
-                $message->set('profile::id', $profile->getId());
-                $message->set('profile::email', $profile->email);
-                $message->set('profile::name', htmlentities($profile->name));
-                $message->addHeader('X-Profile-Name', $profile->name);
-                $message->addHeader('X-Profile-ID', $profile->getId());
+                $message->set('sig', $course->getEmailSignature());
+                $message->set('subject::email', $course->getEmail());
+                $message->set('course::id', $course->getId());
+                $message->set('course::email', $course->getEmail());
+                $message->set('course::name', htmlentities($course->getName()));
+                $message->addHeader('X-Course-Name', $course->getName());
+                $message->addHeader('X-Course-ID', $course->getId());
 
-                $tpl = \Tk\CurlyTemplate::create($this->getCoa()->subject);
+                // TODO: deprecated, remove when all templates have been changed to Course: ...
+                $message->set('profile::id', $course->getId());
+                $message->set('profile::email', $course->getEmail());
+                $message->set('profile::name', htmlentities($course->getName()));
+                $message->addHeader('X-Profile-Name', $course->getName());
+                $message->addHeader('X-Profile-ID', $course->getId());
+
+                $tpl = \Tk\CurlyTemplate::create($this->getCoa()->getMsgSubject());
                 $subject = $tpl->parse($message->all());
                 $message->setSubject($subject);
-                $message->setFrom($profile->email);
+                $message->setFrom($course->getEmail());
                 $message->addTo($adapter->get('email'));
 
                 $pdf = \Coa\Ui\Pdf\Certificate::create($adapter);

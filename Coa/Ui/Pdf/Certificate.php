@@ -109,7 +109,7 @@ class Certificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\Displa
         //$mpdf->SetProtection(array('print'));
 
         $mpdf->SetTitle('Certificate');
-        $mpdf->SetAuthor($this->getCoa()->getProfile()->getInstitution()->getName());
+        $mpdf->SetAuthor($this->getCoa()->getCourse()->getInstitution()->getName());
 
         if ($this->watermark) {
             $mpdf->SetWatermarkText($this->watermark);

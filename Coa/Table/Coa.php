@@ -31,7 +31,7 @@ class Coa extends \Uni\TableIface
     {
         $this->appendCell(new Cell\Checkbox('id'));
         //$this->appendCell(new Cell\Text('profileId'));
-        $this->appendCell(new Cell\Text('subject'))->addCss('key')->setUrl(\Uni\Uri::createSubjectUrl('/coaEdit.html'));
+        $this->appendCell(new Cell\Text('msgSubject'))->addCss('key')->setUrl(\Uni\Uri::createSubjectUrl('/coaEdit.html'));
         $this->appendCell(new Cell\Text('type'));
         //$this->appendCell(new Cell\Date('modified'));
         $this->appendCell(new Cell\Date('created'));

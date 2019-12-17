@@ -34,16 +34,16 @@ class Coa extends \Uni\FormIface
         $this->appendField(new Field\Select('type', $list))->setLabel('Recipient Type')->prependOption('-- Select --', '')->setTabGroup($tab)
             ->setNotes('Select the user type that this certificate will be sent to.');
         //$this->appendField(new Field\Input('type'));
-        $this->appendField(new Field\Input('subject'))->setLabel('Message Subject')->setTabGroup($tab);
+        $this->appendField(new Field\Input('msgSubject'))->setLabel('Message Subject')->setTabGroup($tab);
 
         $this->addField(new Field\File('background', $this->getCoa()->getDataPath()))->setTabGroup($tab)
-            ->setMaxFileSize($this->getConfig()->get('upload.profile.imagesize'))->setAttr('accept', '.png,.jpg,.jpeg,.gif')
+            ->setMaxFileSize($this->getConfig()->get('upload.course.imagesize'))->setAttr('accept', '.png,.jpg,.jpeg,.gif')
             ->addCss('tk-imageinput')
             ->setNotes('Upload the background image for the certificate (Recommended Size: 1300x850). Note: Save the record after selecting the image so it is applied to the certificate template in the next tab.');
 
         $tab = 'Certificate';
         $htmlEl = $this->appendField(new Field\Textarea('html'))->setLabel('PDF Template')->setTabGroup($tab)
-            ->addCss('mce')->setAttr('data-elfinder-path', $this->getCoa()->getProfile()->getInstitution()->getDataPath().'/media')
+            ->addCss('mce')->setAttr('data-elfinder-path', $this->getCoa()->getCourse()->getInstitution()->getDataPath().'/media')
         ->setNotes('This HTML template will be converted to the PDF document, click preview to see the result.');
         if ($this->getCoa()->getBackgroundUrl()) {
             $htmlEl->setAttr('data-background-image', $this->getCoa()->getBackgroundUrl());
@@ -51,7 +51,7 @@ class Coa extends \Uni\FormIface
 
         $tab = 'Email Template';
         $this->appendField(new Field\Textarea('emailHtml'))->setTabGroup($tab)
-            ->addCss('mce-med')->setAttr('data-elfinder-path', $this->getCoa()->getProfile()->getInstitution()->getDataPath().'/media');
+            ->addCss('mce-med')->setAttr('data-elfinder-path', $this->getCoa()->getCourse()->getInstitution()->getDataPath().'/media');
 
         $this->appendField(new Event\Submit('update', array($this, 'doSubmit')));
         $this->appendField(new Event\Submit('save', array($this, 'doSubmit')));
