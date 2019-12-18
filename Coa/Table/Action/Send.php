@@ -198,7 +198,7 @@ class Send extends \Tk\Table\Action\Button
     /**
      *
      * @param \Tk\Table\Cell\Iface $cell
-     * @return array
+     * @return bool
      */
     private function ignoreCell($cell)
     {
@@ -229,14 +229,6 @@ class Send extends \Tk\Table\Action\Button
     {
         $this->ignoreCellList = $array;
         return $this;
-    }
-
-    /**
-     * @return \App\Config|\Tk\Config
-     */
-    public function getConfig()
-    {
-        return \App\Config::getInstance();
     }
 
 }

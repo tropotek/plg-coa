@@ -3,6 +3,7 @@ namespace Coa\Ui\Pdf;
 
 use Dom\Renderer\Renderer;
 use Dom\Template;
+use Tk\ConfigTrait;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -14,6 +15,7 @@ use Dom\Template;
  */
 class Certificate extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterface
 {
+    use ConfigTrait;
 
     /**
      * @var \Coa\Adapter\Iface
@@ -191,11 +193,4 @@ HTML;
         return \Dom\Loader::load($xhtml);
     }
 
-    /**
-     * @return \App\Config|\Tk\Config
-     */
-    public function getConfig()
-    {
-        return \App\Config::getInstance();
-    }
 }
