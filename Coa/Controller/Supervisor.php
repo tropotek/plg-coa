@@ -61,7 +61,7 @@ class Supervisor extends \Uni\Controller\AdminManagerIface
         );
         $this->getTable()->getFilterForm()->load($value);
 
-        $list = \App\Db\PlacementTypeMap::create()->findFiltered(array('courseId' => $this->getConfig()->getCourseId()));
+        $list = \App\Db\PlacementTypeMap::create()->findFiltered(array('courseId' => $this->getConfig()->getCourseId(), 'active' => true));
         $this->getTable()->appendFilter(new \Tk\Form\Field\CheckboxSelect('placementTypeId', $list));
 
         $this->getTable()->appendFilter(new  \Tk\Form\Field\Input('minPlacements'))->setAttr('placeholder', 'Min. Placements');
