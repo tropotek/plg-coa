@@ -1,6 +1,6 @@
 # EMS COA Plugin
 
-__Project:__ [uom-plg/plg-coa](http://packagist.org/packages/uom-plg/plg-coa)
+__Project:__ [ttek-plg/plg-coa](http://packagist.org/packages/ttek-plg/plg-coa)
 __Web:__ <http://www.tropotek.com/>
 __Authors:__ Michael Mifsud <http://www.tropotek.com/>  
   
@@ -15,18 +15,18 @@ Allows staff to send Certificates Of Appreciation to companies/staff/students wi
 
 ## Installation
 
-Available on Packagist ([uom-plg/plg-coa](http://packagist.org/packages/uom-plg/plg-coa))
+Available on Packagist ([ttek-plg/plg-coa](http://packagist.org/packages/ttek-plg/plg-coa))
 and as such installable via [Composer](http://getcomposer.org/).
 
 ```bash
-# composer require uom-plg/plg-coa
+# composer require ttek-plg/plg-coa
 ```
 
 Or add the following to your composer.json file:
 
 ```json
 {
-  "uom-plg/plg-coa": "~3.2"
+  "ttek-plg/plg-coa": "~3.2"
 }
 ```
 
